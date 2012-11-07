@@ -1,0 +1,107 @@
+﻿{% extends "base.html" %}
+
+
+{% block title %}{{group_name|default:'后台'}}管理{% endblock %}
+
+{% block content %}
+<div class="container">
+
+<!-- Main hero unit for a primary marketing message or call to action -->
+<div class="hero-unit">
+<h1>{{group_name|default:'后台'}}</h1>
+<p></p>
+</div>
+
+<!-- Example row of columns -->
+<div class="row">
+<div class="span12">
+    <table class="table">
+    <thead>
+      <tr>
+        <th>标题</th>
+        <th>作者</th>
+        <th>发现时间</th>      
+        <th>点击数</th>        
+        <th>操作</th>                
+      </tr>
+    </thead>
+    <tbody>
+        {% for post in posts %}
+            <tr>
+            <td><a href="{{post.0}}" target="_blank">{{post.1}}</a></td>
+            <td>{{post.3}}</td>
+            <td class="muted">{{post.2}}</td>
+            <td>{{post.5}}</td>               
+            <td><button href="#" class="btn btn-danger remove" id="{{post.0}}">删除</button></td>            
+            </tr>
+      
+        {% endfor %}
+
+    </tbody>
+
+    </table>
+</div>
+</div>
+
+<div class="row">
+<div class="span4 offset4">
+    <ul class="pager">
+    {% if frontpage %}
+        <li>
+        <a href="{{frontpage}}">上一页</a>
+        </li>
+    {% endif %}
+    <li>
+    <a href="{{nextpage}}">下一页</a>
+    </li>
+    </ul>
+</div>
+</div>
+
+<div class="row">
+<div class="span12">
+  <div class="bs-docs-example">
+    <h3>网友们都在看下面的帖子！</h3>
+    <ul>
+        {% for tie in hot_post %}
+            <li><a href="{{tie.0}}">{{tie.1}}</li>
+        {% endfor %}
+    </ul>
+  </div>
+</div>
+</div>
+{% endblock %}
+     
+{% block script %}
+<script>
+$(document).ready(function(){
+  //alert($("#1").parent().html())
+  $(".remove").click(function () { 
+    //alert($(this).parent().html());
+    var url = $(this).attr("id");
+    //alert(url);
+    $(this).parent().parent().slideUp("slow", function () {
+        //$.post("/xkds/remove", { "url":url} );
+        //var jqxhr = $.post("/xkds/remove",{ "url":url});
+        //alert('com');
+        var jqxhr = $.post("/tieba/remove",{ "url":url}, function(data) {
+           //alert("删除结果: " + data);
+         });
+    });
+  });
+
+  function get_total_amount(){
+    var jqxhr = $.get("/tieba/amount", function(data) {
+        //alert("total_amount:"+data);
+        $("#total_amount").html(data);
+    })
+    .success(function() { })
+    //.error(function() { alert("get post total amount falied"); })
+    .complete(function() { window.setTimeout(get_total_amount,5000); });
+  }
+  //get_total_amount()
+
+});
+</script>
+
+{% endblock %}

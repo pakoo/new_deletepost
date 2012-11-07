@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<meta charset="utf-8" /> 
+<script src="http://code.jquery.com/jquery-1.6.1.min.js"> </script>
+<title>kds 被删掉的帖子</title>
+<style>
+body {margin:0px;}
+#pagebody {clear:both;margin: 0 auto;width:1000px;}
+.item {float:left;clear:both;width:1000px;line-height:25px;}
+.title {float:left;width:760px;}
+.post_time {float:left}
+.user {float:right}
+#otherpage {clear:both;width:1000px;TEXT-ALIGN:center;}
+#frontpage {width:100px;}
+#nextpage {}
+
+</style>
+<body>
+    <div #pagebody>
+    <a href="/kds/1/"><h1>kds 被删掉的帖子</h1></a>
+    {% for post in posts %}
+        <div class="item"><div class="title"><a href="{{post.0}}" target="_blank" >{{post.1}}</a></div> <div class="post_time">{{post.2}}</div> <div class="user">{{post.3}}</div></div>
+    {% endfor %}
+
+    </div>
+    <div id="otherpage">
+        {% if frontpage %}
+        <div id="frontpage">
+            <a href="{{frontpage}}">上一页</a>
+        </div>
+        {% endif %}
+        <div id="nextpage">
+            <a href="{{nextpage}}">下一页</a>
+        </div>
+        <p id="total_amount">
+        {{total_amount}}
+        </p>
+    </div>
+        <footer>
+            <center>
+            <script language="javascript" type="hidden" src="http://js.users.51.la/9399637.js"></script>
+            <noscript><a href="http://www.51.la/?9399637" target="_blank"><img alt="&#x6211;&#x8981;&#x5566;&#x514D;&#x8D39;&#x7EDF;&#x8BA1;" src="http://img.users.51.la/9399637.asp" style="border:none" /></a></noscript>
+            </center>
+        </footer>
+</body>
+<script>
+$(document).ready(function(){
+    function get_total_amount(){
+        var jqxhr = $.get("/kds/amount", function(data) {
+        //alert("total_amount:"+data);
+        $("#total_amount").html(data);
+        })
+        .success(function() { })
+//        .error(function() { alert("get post total amount falied"); })
+        .complete(function() { window.setTimeout(get_total_amount,5000); });
+    }
+
+    get_total_amount();
+    });
+</script>
+<html>

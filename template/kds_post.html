@@ -1,0 +1,118 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>{{title}}</title>
+  <meta content={{title}} name="title" />
+  <meta content={{title}},宽带山,kds,删除,删掉的帖子 name="description" />
+  <meta content="宽带山 kds" name="keywords" />
+  <link rel="shortcut icon" href="/media/zhongzi/xiongji.ico" />
+<!--[if lt IE 9]>
+<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+<link href="/media/zhongzi/tieba.css" media="screen" rel="stylesheet" type="text/css" />
+  <meta name="viewport" content="width=970, maximum-scale=1.0" />
+<script src="/media/zhongzi/jquery.js" type="text/javascript">
+</script>
+<style type=text/css>
+BODY { background:#fff;}
+*{padding:0px;margin:0px;}
+* li{list-style:none;}
+a{ color:#106294}
+UL {LIST-STYLE-TYPE: none;padding:0px;margin:0px;}
+LI {FONT-SIZE: 12px; COLOR: #333; LINE-HEIGHT: 1.5em; FONT-FAMILY: "宋体", Arial, Verdana;}
+#header{background:#FFF url('/media/img/head_bg.jpg') repeat-x bottom;height:105px;text-align:center;}
+
+#mainmenu{width:960px; margin:0 auto;BACKGROUND: url('/media/img/menu_bg.jpg') bottom repeat-x;HEIGHT: 33px; }
+#mainmenu .menu-right {background:url('/media/img/menu_r.jpg') no-repeat right bottom;height:33px;}
+#mainmenu UL{}
+#mainmenu UL LI {FLOAT: left;}
+#mainmenu UL LI a {WIDTH: 150px;CURSOR: pointer;background:url('/media/img/menu_line.jpg') no-repeat right;line-HEIGHT:33px;text-decoration: none;DISPLAY: block;COLOR: #fff;TEXT-ALIGN: center; FONT-WEIGHT: bold;}
+#mainmenu UL LI a:hover {BACKGROUND: url('/media/img/menu_li_hover.jpg') bottom no-repeat; COLOR: #000;}
+#mainmenu UL LI.home{BACKGROUND: url('/media/img/menu_home.jpg') center bottom no-repeat;}
+#mainmenu UL LI.home a:hover{BACKGROUND: url('/media/img/menu_home_hover.jpg') center bottom no-repeat;}
+
+#mainmenu li#search{float: right;padding:6px 20px 0 0;}
+#mainmenu li#search input{border: #065387 1px solid;font-size: 12px;width: 150px;color: #666;height:16px;line-height:16px;}
+#mainmenu li#search input.submit{border: 0px;font-weight: 600;background:none;width: 59px;cursor: pointer;color: #fff;height: 20px;}
+
+
+
+</style>
+
+    <DIV id=mainmenu> 
+	<div class="menu-right">
+       <UL> 
+        <LI class="home"><A  href="/" target=_parent>首  页</A> </LI> 
+        <LI><A  href="/kds/1/" target=_parent>kds 宽带山 被删掉的帖子</A> </LI> 
+        <LI><A  href="/tieba/1/" target=_parent>D8 李毅吧 被删掉的帖子</A> </LI>
+	  </UL>
+    </DIV>
+	</DIV> 
+    
+    
+  </head>
+<body>
+<div id="main" class="main">
+
+<h1 class="round2 back">{{ title }}</h1>
+<p class="round2 back"><a href={{data.original_url}}>原帖地址</a></p>
+
+<div class="cai-post-list round">
+        {% for reply in data.content %}
+        <table>
+        <tbody>
+        <tr>
+        <td class="right small">
+        <span class="border">{{reply.user_name}}</span>
+        <span class="border">{{reply.create_time}}</span>
+        <span class="border">第{{reply.floor}}楼</span>
+        </tr>
+        </tbody>
+        </table>
+        
+        <div class="content round" style="word-break:break-all;overflow:hidden;">
+        {{reply.content|safe}}
+        </div>
+        {% endfor %}
+
+</div>
+
+<script type="text/javascript">
+  //破防盗链js
+//function ImgRebuild() {
+//	$(".content img").each(function(i){
+//		url = this.src;
+//		width = this.width;
+//		height = this.height;
+//		var imgid = Math.random(),
+//		frameid = 'frameimg' + imgid;
+//		window['img'+imgid] = '<img id="img" src=\''+url+'\' /><script>window.onload = function() { parent.document.getElementById(\''+frameid+'\').height = document.getElementById(\'img\').height+\'px\'; }<'+'/script>';
+//		img_r = '<iframe id="'+frameid+'" src="javascript:parent[\'img'+imgid+'\'];" frameBorder="0" height="' +height+ '" scrolling="no" width="100%"></iframe>';
+//		$(this).replaceWith(img_r);
+//	});
+//	return '';
+//}
+//ImgRebuild();
+</script>
+<script type="text/javascript" charset="utf-8">
+    $(document).ready(function() {
+     $('#ajax_top').bind("ajax:success", function(event, data) {
+            var top = $('#ajax_top');
+            var num = $('#num');
+         //alert(data.top);
+         top.html( data.top );
+         num.text(data.top);
+         top.hide();
+         num.show();
+        });
+    });
+</script>
+</body>
+        <footer>
+            <center>
+            <script language="javascript" type="hidden" src="http://js.users.51.la/9399637.js"></script>
+            <noscript><a href="http://www.51.la/?9399637" target="_blank"><img alt="&#x6211;&#x8981;&#x5566;&#x514D;&#x8D39;&#x7EDF;&#x8BA1;" src="http://img.users.51.la/9399637.asp" style="border:none" /></a></noscript>
+            </center>
+        </footer>
+</html>
