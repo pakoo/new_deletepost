@@ -376,7 +376,7 @@ def get_tieba_post(tieba_name='liyi'):
     else:
         print 'get tieba mainpage html fail'
 
-def get_kds_post_reply(post_soup,sort_name,post_url,page=1):
+def get_tieba_reply(post_soup,sort_name,post_url,page=1):
     """
     解析帖子内容
     """
