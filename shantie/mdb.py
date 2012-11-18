@@ -12,12 +12,13 @@ import time
 import os
 mktime=lambda dt:time.mktime(dt.utctimetuple())
 ######################db.init######################
-con = pymongo.Connection('199.15.113.215', 27017)
+#con = pymongo.Connection('199.15.113.215', 27017)
+con = pymongo.Connection('localhost', 27017)
 kds=con.kds
 tieba=con.tieba
 #db_post=kds.post
 #db_fs=gridfs.GridFS(kds,'postfile')
-debug_flag = 1
+debug_flag = 0
 ######################db.init######################
 def transUinxtime2Strtime(utime,type=0):
 #    stime=time.strftime("%a, %d %b",time.localtime(utime))
@@ -87,7 +88,7 @@ def get_tieba_delete_post_url(page,count=50):
     if delete_post_list.count()>0:
         item_num=0
         for p in delete_post_list:
-            print 'post:',p['url']
+            #print 'post:',p['url']
             result.append([
                           "/tieba/post/%s"%p['url'],
                           p['title'],

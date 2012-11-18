@@ -1,7 +1,7 @@
 ﻿# -*- coding: utf-8 -*-
 from django.template import loader ,Context
 from django.http import HttpResponse , HttpResponseRedirect
-from django.shortcuts import render_to_response as render
+from django.shortcuts import render_to_response as render,render_to_response
 from mdb import get_delete_post_url,get_tieba_delete_post_url,get_tieba_post_reply
 from django.utils.encoding import smart_str, smart_unicode
 import os
@@ -11,6 +11,21 @@ import StringIO
 import zlib
 import mdb
 from django.views.decorators.csrf import csrf_exempt,csrf_protect
+from django.core.signals import request_finished
+from django.dispatch import receiver
+import random
+
+#pv=0
+#@receiver(request_finished)
+#def add_page_view(sender, **kwargs):
+#    global pv
+#    pv+=1
+#    print 'sender:',sender,dir(sender)
+#    r = sender.request_class
+#    #print 'sender url:',r.get_full_path()
+#    print 'argv:',dir(kwargs['signal']),
+#    print ">>>>>>>>>>>>>>>>>>>>>>>又完成了一个请求!!!" 
+#    print "page view=%s"%pv
 
 def deflate(data):
     try:
@@ -41,7 +56,21 @@ def get_html(url):
     return html
 
 def mainpage(request):
-    return render('mainpage.html',{})
+    #print 'session id:',request.session['sessionid']
+    print 'cookie:',request.COOKIES
+    res =  request.session.test_cookie_worked()
+    if res:
+        print 'test cookie:',res
+    else:
+        request.session.set_test_cookie()
+    uid = request.session.get('uid',None)
+    if uid:
+        print 'session uid:',uid
+    else:
+        request.session['uid'] = random.random()
+    response  = render_to_response('mainpage.html', {}) 
+    response.set_cookie("my_cookie",'cookie value')
+    return response
 
 
 def xkds_mainpage(request):
@@ -70,6 +99,7 @@ def xkds(request,page):
 
 def diba(request,page):
     print 'page:',page
+    agent = request.META.get('HTTP_USER_AGENT','')
     page=int(page)
     frontpage='/tieba/%s/'%(page-1)
     nextpage='/tieba/%s/'%(page+1)
@@ -88,7 +118,10 @@ def diba(request,page):
     else:
         post_data['frontpage']=None
     post_data['nextpage']=nextpage
-        
+    print 'HTTP_USER_AGENT:',request.META.get('HTTP_USER_AGENT',{})
+    if 'IE' in agent:
+        print "发现傻逼IE!!!!!!!!!!!!!"
+        return render('diba.html',post_data)
     return render('hero.html',post_data)
 
 
