@@ -376,67 +376,6 @@ def get_tieba_post(tieba_name='liyi'):
     else:
         print 'get tieba mainpage html fail'
 
-def get_tieba_reply(post_soup,sort_name,post_url,page=1):
-    """
-    解析帖子内容
-    """
-    print 'post_url:',post_url
-    db_name = 'tieba'
-    tieba_reply = tieba.reply
-    reply_list_tmp = post_soup.findAll('div',{'class':'p_postlist'})
-    reply_list = []
-    try:
-        reply_list.append(reply_list_tmp[0].find('div',{'class':'l_post noborder'}))
-        reply_list_tmp = reply_list_tmp[0].findAll('div',{'class':'l_post '})
-    except Exception,e:
-        print traceback.print_exc()
-        print '====================================\n'
-        print post_soup
-    for r in reply_list_tmp:
-        reply_list.append(r)
-    #print reply_list[0].text
-    #print 'reply_list len:',len(reply_list)
-    #time.sleep(999)
-    #for r in reply_list:
-    #    print '=========================\n'
-    #    print r
-    #print reply_list[0]
-    #print json.loads(reply_list[0]['data-field'])
-    #print reply_list[0].findAll('div',{'class':'d_post_content'})
-    #return
-    rcount = 1
-    reply_data = []
-    author_name = '' 
-    for reply in reply_list:
-        #print '>'*150
-        #print '第%s楼'%rcount
-        #print 'reply:',reply
-        #p_author = reply.find('ul',{'class':'p_author'}).findAll('li')
-        if reply is None :
-            continue
-        d_post_content = reply.find('div',{'class':'d_post_content'})
-        p_tail = reply['data-field']
-        if p_tail:
-            p_tail = json.loads(p_tail)
-            #print 'tpye:',type(p_tail)
-            #print 'p_tail:',p_tail
-            create_time = transtime(p_tail['content']['date'])
-            user_id = p_tail['author'].get('outer_id',-1)
-            user_name = p_tail['author']['name']
-        else:
-            create_time = tim.time()
-            user_name = ''
-            user_id =-1 
-
-        #print 'd_post_content:',str(d_post_content)
-        #print 'user name:',user_name
-                    
-            post_insert(post_info,'tieba')
-
-    else:
-        print 'get tieba mainpage html fail'
-
-def get_tieba_reply(post_soup,sort_name,post_url,page=1):
     """
     解析帖子内容
     """
