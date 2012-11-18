@@ -335,8 +335,10 @@ def get_tieba_post(tieba_name='liyi'):
             'find_time':time.time(),
             'tieba_name':tieba_name,
             }
+            post_html = get_html(post_url)
             post_html2 = get_html(post_url+'?pn=2')
-            if post_html2 is None:
+            post_html3 = get_html(post_url+'?pn=3')
+            if post_html is None:
                 print ">"*150
                 print "下载帖子html失败"
                 print ">"*150
@@ -344,11 +346,11 @@ def get_tieba_post(tieba_name='liyi'):
             #reply_list = post_soup.findAll('div',{'class':'p_post'})
             #print 'reply_len:',len(reply_list)
             #if len(reply_list) < 1 :
-            if 'closeWindow' in post_html2 :
+            if 'closeWindow' in post_html :
                 post_info['is_open'] = 0
                 post_info['find_time'] =int(time.time())
             else:
-                post_soup = BeautifulSoup(post_html2,fromEncoding='gbk')
+                post_soup = BeautifulSoup(post_html,fromEncoding='gbk')
                 post_info['content'] = get_tieba_reply(post_soup,sort_name=tieba_name,post_url = post_info['url'])
                 #print 'post_info:',post_info
                 create_time = post_info['content'][0].get('create_time',time.time())
@@ -356,40 +358,79 @@ def get_tieba_post(tieba_name='liyi'):
                 post_info['find_time'] =post_info['create_time']
                 #post_fid=save_post(post_info['url'],post_html,db=tieba)
                 #post_info['fid'] = post_fid
-            #print 'post_info:',post_info
-                if post_html2 is not None :
+                #下载第二页
+                if post_html2 is not None and 'closeWindow' not in post_html:
                     post_soup = BeautifulSoup(post_html2,fromEncoding='gbk')
                     next_content = get_tieba_reply(post_soup,sort_name=tieba_name,post_url = post_info['url'],page=2)
                     if next_content:
                         post_info['content'].extend(next_content)
-                    
-            post_html3 = get_html(post_url+'?pn=3')
-            if post_html3 is None:
-                print ">"*150
-                print "下载帖子html失败"
-                print ">"*150
-                continue
-            #reply_list = post_soup.findAll('div',{'class':'p_post'})
-            #print 'reply_len:',len(reply_list)
-            #if len(reply_list) < 1 :
-            if 'closeWindow' in post_html3 :
-                post_info['is_open'] = 0
-                post_info['find_time'] =int(time.time())
-            else:
-                post_soup = BeautifulSoup(post_html3,fromEncoding='gbk')
-                post_info['content'] = get_tieba_reply(post_soup,sort_name=tieba_name,post_url = post_info['url'])
-                #print 'post_info:',post_info
-                create_time = post_info['content'][0].get('create_time',time.time())
-                post_info['create_time'] =post_info['content'][0].get('create_time',0) 
-                post_info['find_time'] =post_info['create_time']
-                #post_fid=save_post(post_info['url'],post_html,db=tieba)
-                #post_info['fid'] = post_fid
-            #print 'post_info:',post_info
-                if post_html3 is not None :
+                #下载第三页
+                if post_html3 is not None and 'closeWindow' not in post_html:
                     post_soup = BeautifulSoup(post_html3,fromEncoding='gbk')
                     next_content = get_tieba_reply(post_soup,sort_name=tieba_name,post_url = post_info['url'],page=3)
                     if next_content:
                         post_info['content'].extend(next_content)
+                    
+            post_insert(post_info,'tieba')
+
+    else:
+        print 'get tieba mainpage html fail'
+
+def get_tieba_reply(post_soup,sort_name,post_url,page=1):
+    """
+    解析帖子内容
+    """
+    print 'post_url:',post_url
+    db_name = 'tieba'
+    tieba_reply = tieba.reply
+    reply_list_tmp = post_soup.findAll('div',{'class':'p_postlist'})
+    reply_list = []
+    try:
+        reply_list.append(reply_list_tmp[0].find('div',{'class':'l_post noborder'}))
+        reply_list_tmp = reply_list_tmp[0].findAll('div',{'class':'l_post '})
+    except Exception,e:
+        print traceback.print_exc()
+        print '====================================\n'
+        print post_soup
+    for r in reply_list_tmp:
+        reply_list.append(r)
+    #print reply_list[0].text
+    #print 'reply_list len:',len(reply_list)
+    #time.sleep(999)
+    #for r in reply_list:
+    #    print '=========================\n'
+    #    print r
+    #print reply_list[0]
+    #print json.loads(reply_list[0]['data-field'])
+    #print reply_list[0].findAll('div',{'class':'d_post_content'})
+    #return
+    rcount = 1
+    reply_data = []
+    author_name = '' 
+    for reply in reply_list:
+        #print '>'*150
+        #print '第%s楼'%rcount
+        #print 'reply:',reply
+        #p_author = reply.find('ul',{'class':'p_author'}).findAll('li')
+        if reply is None :
+            continue
+        d_post_content = reply.find('div',{'class':'d_post_content'})
+        p_tail = reply['data-field']
+        if p_tail:
+            p_tail = json.loads(p_tail)
+            #print 'tpye:',type(p_tail)
+            #print 'p_tail:',p_tail
+            create_time = transtime(p_tail['content']['date'])
+            user_id = p_tail['author'].get('outer_id',-1)
+            user_name = p_tail['author']['name']
+        else:
+            create_time = tim.time()
+            user_name = ''
+            user_id =-1 
+
+        #print 'd_post_content:',str(d_post_content)
+        #print 'user name:',user_name
+                    
             post_insert(post_info,'tieba')
 
     else:
