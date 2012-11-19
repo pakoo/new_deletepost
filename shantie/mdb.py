@@ -10,12 +10,14 @@ from pymongo import ASCENDING,DESCENDING
 import gridfs
 import time
 import os
+from hashlib import md5
 mktime=lambda dt:time.mktime(dt.utctimetuple())
 ######################db.init######################
 #con = pymongo.Connection('199.15.113.215', 27017)
 con = pymongo.Connection('localhost', 27017)
 kds=con.kds
 tieba=con.tieba
+db_web = con.web
 #db_post=kds.post
 #db_fs=gridfs.GridFS(kds,'postfile')
 debug_flag = 0
@@ -208,10 +210,88 @@ def search_post(keyword='',page=1,tieba_name='liyi'):
                 item_num+=1
             return result,hot_post,tieba.post.count()
 
+def create_user(name,password,ip='',email=''):
+    """
+    创建用户
+    """
+    if name and password:
+        print 'name:',name
+        print 'password:',password
+    else:
+        return 0
+    user_name_check = db_web.user.find_one({'name':name}) 
+    if not user_name_check :
+        #用户名不存在，创建新用户
+        m = md5()
+        m.update(password)
+        user = {'name':name,
+                'password':m.hexdigest(),
+                'email':email,
+                'is_master':0,
+                'ip':ip,
+        }
+        db_web.user.insert(user)
+        print "%s注册成功!!"%name
+        return 1
+    else:
+        #用户名已存在
+        return -1
+
+def user_login(name,password):
+    """
+    用户登录
+    """
+    if name and password:
+        print 'name:',name
+        print 'password:',password
+        m = md5()
+        m.update(password)
+        password_md5 =m.hexdigest()
+    else:
+        return 0
+
+    user_name_pwd_check = db_web.user.find_one({'name':name,'password':password_md5}) 
+
+    if user_name_pwd_check:
+        #用户名密码正确
+        return 1
+    else:
+        #用户名密码错误k
+        return -1
+
+def add_advice(content,name='',ip=''):
+    """
+    添加留言
+    """
+    if len(content) > 140:
+        print "留言太长!!!"
+    else:
+        advice = {
+                 'content':content,
+                 'name':name,
+                 'ip':ip,
+                 'create_time':int(time.time()),
+        }
+        db_web.advice.insert(advice)
+
+def get_advice():
+    """
+    获取留言
+    """
+    advice_list = db_web.advice.find({},limit=20,skip=0,sort=[('create_time',DESCENDING)])
+    advice_list = [a for a in advice_list]
+    return advice_list 
+    
+
 if __name__ == "__main__":
+    pass
     #print get_delete_post_url()
     #print get_tieba_delete_post_url()
     #print get_post_html(1584957558,'tieba')
     #print delete_post(1584957558,db=tieba)
     #print get_tieba_post_reply(1599791533,'tieba')
-    print get_hot_post('tieba')
+    #print get_hot_post('tieba')
+    #print create_user('gan','123456','')
+    #print user_login('gan','123456')
+    #add_advice('test','admin')
+    #print get_advice()

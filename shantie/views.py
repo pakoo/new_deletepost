@@ -297,3 +297,9 @@ def save_html(request,url):
     html = get_html(str(url))
     print type(html)
     return HttpResponse(html)
+
+def advice_board(request):
+    """
+    留言
+    """
+    pass
