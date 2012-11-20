@@ -300,6 +300,14 @@ def save_html(request,url):
 
 def advice_board(request):
     """
-    留言
+    留言版
     """
-    pass
+    return render('advice.html',{})
+
+
+def manage_login(request):
+    """
+    后台登录页
+    """
+    return render('admin.html',{})
+    

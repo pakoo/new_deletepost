@@ -32,6 +32,8 @@ urlpatterns = patterns('',
 
 
      url(r'^search/(?P<keyword>\w+)/(?P<page>\d+)', 'shantie.views.search_post'),
+     url(r'^admin', 'shantie.views.manage_login'),
+     url(r'^advice', 'shantie.views.advice_board'),
 #    
     # url(r'^hotkw/', include('hotkw.foo.urls')),
 
