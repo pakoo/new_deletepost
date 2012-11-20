@@ -1,0 +1,41 @@
+﻿{% extends "base.html" %}
+
+
+{% block title %}李毅吧{% endblock %}
+
+{% block content %}
+
+<v class="container">
+    <div class="row">
+    <div class="span4 offset4">
+        <form class="form-horizontal " action="" method="post">
+            <fieldset>
+            <legend>给站长留言</legend>
+            <div class="control-group">
+                <label for="input01" class="control-label">留言者昵称</label>
+                <div class="controls">
+                    <input type="text" id="nickname" class="input-xlarge" placeholder="屌丝欢">
+                    <p class="help-block">
+                        给自己取个名字
+                    </p>
+                </div>
+            </div>
+          
+            <div class="control-group">
+                <label for="textarea" class="control-label">留言内容</label>
+                <div class="controls">
+                <textarea rows="10" id="advice" class="input-xxlarge"></textarea>
+                </div>
+            </div>
+            
+            <div class="form-actions">
+                <button class="btn btn-primary" type="submit">发送</button>
+            </div>
+            </fieldset>
+        </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
