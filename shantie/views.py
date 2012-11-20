@@ -147,7 +147,13 @@ def kds_backend(request,page):
     return render('kds_backend.html',post_data)
     
 def tieba_backend(request,page):
+    #print 'session id:',request.session['sessionid']
     print 'page:',page
+    user_session =request.session 
+    print 'user_session is_login:',user_session.get('is_login',0)
+    #if user_session.get('sessionid',0):
+    if user_session.get('is_login',0) != 1: 
+        return HttpResponseRedirect('/admin')
     page=int(page)
     frontpage='/tieba/manage/%s/'%(page-1)
     nextpage='/tieba/manage/%s/'%(page+1)
@@ -309,5 +315,43 @@ def manage_login(request):
     """
     后台登录页
     """
+    user_session =request.session 
+    print 'user_session is_login:',user_session.get('is_login',0)
+    if user_session.get('is_login',0) == 1:
+            return HttpResponseRedirect('/tieba/manage/1/')
     return render('admin.html',{})
+
+@csrf_exempt    
+def admin_login(request):
+    """
+    管理员登录
+    """
+    print 'POST:',request.POST
+    user_session =request.session 
+    print 'user_session is_login:',user_session.get('is_login',0)
+    user_name = request.POST.get('username','')
+    password = request.POST.get('password','')
+    if len(user_name) > 10 or len(password) >20:
+        return HttpResponse('用户名密码错误')
+    else:
+        if mdb.user_login(user_name,password) == 1:
+            user_session['is_login'] = 1
+            return HttpResponseRedirect('/tieba/manage/1/')
+        else:
+            return HttpResponse('用户名密码错误')
+            
+def admin_logout(request):
+    """
+    管理员登出
+    """
+    user_session =request.session 
+    print 'user_session is_login:',user_session.get('is_login',0)
+    user_session['is_login'] = 0
+    return HttpResponse('退出成功!')
+
+
+
+
+
+
     

@@ -1,4 +1,5 @@
 ﻿import os
+import os.path
 # Django settings for oucena project.
 
 DEBUG = True
@@ -10,10 +11,13 @@ ADMINS = (
 )
 
 MANAGERS = ADMINS
-
+pre_path =os.path.abspath('..') 
+template_path = os.path.join(pre_path,'template')
+static_path = os.path.join(pre_path,'static')
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
+        #'NAME': '/home/user/oucena.db',                      # Or path to database file if using sqlite3.
         'NAME': '/root/oucena.db',                      # Or path to database file if using sqlite3.
         'USER': '',                      # Not used with sqlite3.
         'PASSWORD': '',                  # Not used with sqlite3.
@@ -68,7 +72,10 @@ STATICFILES_DIRS = (
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-    '/root/test/oucena/static',
+    #static_path,
+    'static',
+    #'/home/user/gitcode/new_deletepost/static',
+    #'/root/test/oucena/static',
     #'D:\oucena\static',
 )
 
@@ -105,12 +112,15 @@ ROOT_URLCONF = 'oucena.urls'
 
 # Python dotted path to the WSGI application used by Django's runserver.
 WSGI_APPLICATION = 'oucena.wsgi.application'
-
 TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-    '/root/test/oucena/template',
+    #template_path,
+    #heihei,
+    'template',
+    #'/home/user/gitcode/new_deletepost/template',
+    #'/root/test/oucena/template',
     #'D:/oucena/template',
 )
 
