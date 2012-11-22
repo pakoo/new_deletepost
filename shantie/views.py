@@ -118,10 +118,10 @@ def diba(request,page):
     else:
         post_data['frontpage']=None
     post_data['nextpage']=nextpage
-    print 'HTTP_USER_AGENT:',request.META.get('HTTP_USER_AGENT',{})
-    if 'IE' in agent:
-        print "发现傻逼IE!!!!!!!!!!!!!"
-        return render('diba.html',post_data)
+    #print 'HTTP_USER_AGENT:',request.META.get('HTTP_USER_AGENT',{})
+    #if 'IE' in agent:
+    #    print "发现傻逼IE!!!!!!!!!!!!!"
+    #    return render('diba.html',post_data)
     return render('hero.html',post_data)
 
 
