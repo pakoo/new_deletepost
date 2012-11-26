@@ -1,0 +1,41 @@
+﻿{% extends "base.html" %}
+
+
+{% block title %}李毅吧{% endblock %}
+
+{% block content %}
+<div class="container">
+
+<!-- Main hero unit for a primary marketing message or call to action -->
+<div class="hero-unit">
+<h1>李毅吧</h1>
+<p></p>
+</div>
+
+<!-- Example row of columns -->
+<div class="row">
+<div class="span12">
+    <table class="table">
+    <thead>
+      <tr>
+        <th>昵称</th>
+        <th>内容</th>
+      </tr>
+    </thead>
+    <tbody>
+        {% for m in mlist %}
+            <tr>
+            <td>{{m.0}}</td>
+            <td>{{m.1}}</td>                
+            </tr>
+      
+        {% endfor %}
+
+    </tbody>
+
+    </table>
+</div>
+</div>
+
+{% endblock %}
+     

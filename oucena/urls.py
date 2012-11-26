@@ -36,6 +36,8 @@ urlpatterns = patterns('',
      url(r'^advice', 'shantie.views.advice_board'),
      url(r'^xlogin', 'shantie.views.admin_login'),
      url(r'^xlogout', 'shantie.views.admin_logout'),
+     url(r'^add_advice', 'shantie.views.send_advice'),
+     url(r'^liuyan', 'shantie.views.advice_message'),
 #    
     # url(r'^hotkw/', include('hotkw.foo.urls')),
 

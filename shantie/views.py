@@ -118,6 +118,7 @@ def diba(request,page):
     else:
         post_data['frontpage']=None
     post_data['nextpage']=nextpage
+    post_data['liyi']='active'
     #print 'HTTP_USER_AGENT:',request.META.get('HTTP_USER_AGENT',{})
     #if 'IE' in agent:
     #    print "发现傻逼IE!!!!!!!!!!!!!"
@@ -170,6 +171,7 @@ def tieba_backend(request,page):
     else:
         post_data['frontpage']=None
     post_data['nextpage']=nextpage
+    post_data['liyi']='active'
         
     return render('manage.html',post_data)
 
@@ -308,7 +310,7 @@ def advice_board(request):
     """
     留言版
     """
-    return render('advice.html',{})
+    return render('advice.html',{'advice':'active'})
 
 
 def manage_login(request):
@@ -350,8 +352,27 @@ def admin_logout(request):
     return HttpResponse('退出成功!')
 
 
+@csrf_exempt    
+def send_advice(request):
+    """
+    发送建议
+    """
+    ip = request.META['REMOTE_ADDR']
+    print 'ip:',ip
+    print 'POST:',request.POST
+    nick_name = request.POST.get('nickname','')
+    content = request.POST.get('advice','')
+    if len(nick_name) > 20 or len(content) >140:
+        return HttpResponse('留言字数过多,最多140字!')
+    else:
+        mdb.add_advice(content,nick_name,ip)
+    return HttpResponse('给站长留言成功!')
 
-
-
+def advice_message(request):
+    """
+    留言板信息
+    """
+    message = mdb.get_advice()
+    return render('advice_board.html',{'mlist':message})
 
     

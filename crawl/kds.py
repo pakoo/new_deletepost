@@ -22,8 +22,6 @@ import os
 import os.path
 from pymongo import ASCENDING,DESCENDING
 import requests
-import mechanize
-import cookielib
 mktime=lambda dt:time.mktime(dt.utctimetuple())
 ######################db.init######################
 connection = pymongo.Connection('localhost', 27017)
@@ -134,12 +132,12 @@ def post_insert(para,dbname=None):
     #    print "发现一个黑名单用户%s的帖子"%para['user_name']
     #    para['is_open'] = 2
 
-    org_title = para['title'].encode('utf-8')
-    filter_title = gfw.replace(org_title)
+    #org_title = para['title'].encode('utf-8')
+    #filter_title = gfw.replace(org_title)
     #过滤不和谐帖子
-    if filter_title != org_title:
-        print '>>>>>>>>>>>>>>>>>>>>>>>>>>>发现不和谐帖子<<<<<<<<<<<<<<<<<<<<<<<<<<'
-        para['is_open']=-1
+    #if filter_title != org_title:
+    #    print '>>>>>>>>>>>>>>>>>>>>>>>>>>>发现不和谐帖子<<<<<<<<<<<<<<<<<<<<<<<<<<'
+    #    para['is_open']=-1
     if res:
         if para['is_open'] == 0:
             print "发现了一个被删掉的帖子 %s"%para['url']
@@ -307,6 +305,13 @@ def get_tieba_post(tieba_name='liyi'):
             #print 'row:',p
             time.sleep(3)
             div_title = p.find('a',{'class':'j_th_tit'})
+            title_text = div_title.text
+            org_title = title_text.encode('utf-8')
+            filter_title = gfw.replace(org_title)
+            if org_title != filter_title:
+                print 'title_text:',title_text
+                print '>>>>>>>>>>>>>>>>>>>>>>>>>>>发现不和谐帖子!!!!!!!!!!!!!!!!!<<<<<<<<<<<<<<<<<<<<<<<<<<'
+                continue
             #print "title:",div_title
             div_author = p.find('div',{'class':'threadlist_author'}).span.a
             #print "author:",div_author
@@ -323,7 +328,7 @@ def get_tieba_post(tieba_name='liyi'):
             #print "reply:",div_reply.text
             post_info = {
             'url':int(url[2:]),
-            'title':div_title.text,
+            'title':title_text,
             'reply':int(div_reply.text),
             'user_name':author,
             'user_id':'',
@@ -336,8 +341,6 @@ def get_tieba_post(tieba_name='liyi'):
             'tieba_name':tieba_name,
             }
             post_html = get_html(post_url)
-            post_html2 = get_html(post_url+'?pn=2')
-            post_html3 = get_html(post_url+'?pn=3')
             if post_html is None:
                 print ">"*150
                 print "下载帖子html失败"
@@ -351,6 +354,16 @@ def get_tieba_post(tieba_name='liyi'):
                 post_info['find_time'] =int(time.time())
             else:
                 post_soup = BeautifulSoup(post_html,fromEncoding='gbk')
+                """
+                获取帖子总页数
+                page_line = post_soup.findAll('li',{'class':'l_pager pager_theme_2'})
+                if page_line:
+                    last_page = int(page_line[0].findAll('a')[-1]['href'].split('=')[-1])
+                    print 'last_page:',last_page
+                else:
+                    last_page =1
+                    print 'just one page this post'
+                """
                 post_info['content'] = get_tieba_reply(post_soup,sort_name=tieba_name,post_url = post_info['url'])
                 #print 'post_info:',post_info
                 create_time = post_info['content'][0].get('create_time',time.time())
@@ -358,18 +371,27 @@ def get_tieba_post(tieba_name='liyi'):
                 post_info['find_time'] =post_info['create_time']
                 #post_fid=save_post(post_info['url'],post_html,db=tieba)
                 #post_info['fid'] = post_fid
+                post_html2 = get_html(post_url+'?pn=2')
                 #下载第二页
                 if post_html2 is not None and 'closeWindow' not in post_html:
                     post_soup = BeautifulSoup(post_html2,fromEncoding='gbk')
                     next_content = get_tieba_reply(post_soup,sort_name=tieba_name,post_url = post_info['url'],page=2)
                     if next_content:
                         post_info['content'].extend(next_content)
-                #下载第三页
-                if post_html3 is not None and 'closeWindow' not in post_html:
-                    post_soup = BeautifulSoup(post_html3,fromEncoding='gbk')
-                    next_content = get_tieba_reply(post_soup,sort_name=tieba_name,post_url = post_info['url'],page=3)
-                    if next_content:
-                        post_info['content'].extend(next_content)
+                    post_html3 = get_html(post_url+'?pn=3')
+                    #下载第三页
+                    if post_html3 is not None and 'closeWindow' not in post_html:
+                        post_soup = BeautifulSoup(post_html3,fromEncoding='gbk')
+                        next_content = get_tieba_reply(post_soup,sort_name=tieba_name,post_url = post_info['url'],page=3)
+                        if next_content:
+                            post_info['content'].extend(next_content)
+                        post_html4 = get_html(post_url+'?pn=4')
+                        #下载第四页
+                        if post_html4 is not None and 'closeWindow' not in post_html:
+                            post_soup = BeautifulSoup(post_html4,fromEncoding='gbk')
+                            next_content = get_tieba_reply(post_soup,sort_name=tieba_name,post_url = post_info['url'],page=4)
+                            if next_content:
+                                post_info['content'].extend(next_content)
                     
             post_insert(post_info,'tieba')
 
@@ -484,28 +506,28 @@ def get_tieba_info(tieba_name='liyi'):
 
 
 if __name__ == "__main__":
-    while True:
-        try:
-            get_tieba_post("liyi")
-            #get_tieba_post("wow")
-            #get_tieba_post("meinv")
-            #get_kds_post()
-        except Exception,e:
-            print('\n'*9)
-            traceback.print_exc()
-            print('\n'*9)
+    #while True:
+    #    try:
+    #        get_tieba_post("liyi")
+    #        #get_tieba_post("wow")
+    #        #get_tieba_post("meinv")
+    #        #get_kds_post()
+    #    except Exception,e:
+    #        print('\n'*9)
+    #        traceback.print_exc()
+    #        print('\n'*9)
 #print get_kds_post_reply('http://club.pchome.net/thread_1_15_7030170.html') #main()
 #    print save_post('thread_1_15_6751208__.html','test1',kds)
 #    print transtime('11-11-13 12:30')
 #    para={'user_id': u'234', 'img': '', 'title': u'\u5ac2\u5b50\u5728\u6211\u5e8a\u4e0a\u8fc7\u4e86\u4e00\u591c......', 'url': u'thread_1_15_6746441__.html', 'is_open:': 1, 'content': '', 'create_time': u'11-12-13 10:30', 'cotent':''}
 #    post_insert(para,db=kds)
-    #print get_tieba_post("liyi")
+    print get_tieba_post("liyi")
     #print get_kds_post()
     #check_filter_title()
 
-    #html = get_html("http://tieba.baidu.com/p/1951041165?gn=2")
+    #html = get_html("http://tieba.baidu.com/p/1997596510")
     #post_soup = BeautifulSoup(html,fromEncoding='gbk')
-    #print get_tieba_reply(post_soup,'liyi','1951041165')
+    #print get_tieba_reply(post_soup,'liyi','1997596510')
     
     #print reply_img_insert(db_name = 'tieba',sort_name='liyi',img_url='http://imgsrc.baidu.com/forum/pic/item/0b46f21fbe096b6375fba8f70c338744eaf8acb3.jpg')
     #get_tieba_info()

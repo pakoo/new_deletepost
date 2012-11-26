@@ -263,6 +263,8 @@ def add_advice(content,name='',ip=''):
     """
     添加留言
     """
+    print 'content:',content
+    print 'name:',name
     if len(content) > 140:
         print "留言太长!!!"
     else:
@@ -279,7 +281,8 @@ def get_advice():
     获取留言
     """
     advice_list = db_web.advice.find({},limit=20,skip=0,sort=[('create_time',DESCENDING)])
-    advice_list = [a for a in advice_list]
+    advice_list = [(a['name'],a['content']) for a in advice_list if a['content']]
+    print 'advice_list:',advice_list
     return advice_list 
     
 
@@ -294,4 +297,4 @@ if __name__ == "__main__":
     #print create_user('gan','123456','')
     #print user_login('gan','123456')
     #add_advice('test','admin')
-    #print get_advice()
+    print get_advice()
