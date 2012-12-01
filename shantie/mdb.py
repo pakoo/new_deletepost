@@ -20,7 +20,7 @@ tieba=con.tieba
 db_web = con.web
 #db_post=kds.post
 #db_fs=gridfs.GridFS(kds,'postfile')
-debug_flag = 0
+debug_flag = 0 
 ######################db.init######################
 def transUinxtime2Strtime(utime,type=0):
 #    stime=time.strftime("%a, %d %b",time.localtime(utime))
@@ -185,6 +185,20 @@ def delete_post(post_url,dbname):
     else:
         return 'a wrong url,not exist this post to delete!'
 
+
+def hide_post(post_url,dbname):
+    """
+    hide post
+    """
+    print 'dbname:',dbname
+    db_post = con[dbname].post
+    db_ban_user = con[dbname].ban_user
+    if dbname == 'tieba':
+        post=db_post.update({'url':int(post_url)},{'$set':{'is_open':-9}})
+    elif dbname == 'kds':
+        post=db_post.update({'url':post_url},{'$set':{'is_open':-9}})
+    return 1
+
 def search_post(keyword='',page=1,tieba_name='liyi'):
     """
     根据帖子标题搜索帖子
@@ -294,7 +308,7 @@ if __name__ == "__main__":
     #print delete_post(1584957558,db=tieba)
     #print get_tieba_post_reply(1599791533,'tieba')
     #print get_hot_post('tieba')
-    #print create_user('gan','123456','')
+    #print create_user('oucena','zxzxzx','')
     #print user_login('gan','123456')
     #add_advice('test','admin')
-    print get_advice()
+    #print get_advice()

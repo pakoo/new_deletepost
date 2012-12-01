@@ -28,6 +28,7 @@ urlpatterns = patterns('',
      url(r'^tieba/(?P<page>\d+)', 'shantie.views.diba'),
      url(r'^tieba/manage/(?P<page>\d+)', 'shantie.views.tieba_backend'),
      url(r'^tieba/remove$', 'shantie.views.remove_tieba_post'),
+     url(r'^tieba/hide$', 'shantie.views.hide_post'),
      url(r'^tieba/hot/(?P<page>\d+)', 'shantie.views.tieba_today_hot'),
 
 

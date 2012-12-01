@@ -3,13 +3,15 @@
 
 {% block title %}{{group_name|default:'后台'}}管理{% endblock %}
 
+{% block navbar %}<li class = "{{liuyan|default:""}}"><a href="/liuyan">留言列表</a></li> {% endblock %}
+
 {% block content %}
 <div class="container">
 
 <!-- Main hero unit for a primary marketing message or call to action -->
 <div class="hero-unit">
 <h1>{{group_name|default:'后台'}}</h1>
-<p></p>
+<p id="total_amount">0</p>
 </div>
 
 <!-- Example row of columns -->
@@ -22,7 +24,8 @@
         <th>作者</th>
         <th>发现时间</th>      
         <th>点击数</th>        
-        <th>操作</th>                
+        <th>隐藏</th>                
+        <th>删除</th>                
       </tr>
     </thead>
     <tbody>
@@ -32,9 +35,9 @@
             <td>{{post.3}}</td>
             <td class="muted">{{post.2}}</td>
             <td>{{post.5}}</td>               
+            <td><button href="#" class="btn btn-warning hidepost" id="{{post.0}}">隐藏</button></td>            
             <td><button href="#" class="btn btn-danger remove" id="{{post.0}}">删除</button></td>            
             </tr>
-      
         {% endfor %}
 
     </tbody>
@@ -86,6 +89,14 @@ $(document).ready(function(){
         //alert('com');
         var jqxhr = $.post("/tieba/remove",{ "url":url}, function(data) {
            //alert("删除结果: " + data);
+         });
+    });
+  });
+
+  $(".hidepost").click(function () { 
+    var url = $(this).attr("id");
+    $(this).parent().parent().slideUp("slow", function () {
+        var jqxhr = $.post("/tieba/hide",{ "url":url}, function(data) {
          });
     });
   });

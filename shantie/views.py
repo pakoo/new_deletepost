@@ -375,4 +375,18 @@ def advice_message(request):
     message = mdb.get_advice()
     return render('advice_board.html',{'mlist':message})
 
-    
+@csrf_exempt    
+def hide_post(request):
+    """
+    隐藏帖子
+    """
+    post_url = request.POST['url']
+    print 'post_url:',post_url
+    if post_url:
+        post_id=post_url.split('/')[-1]
+        print 'post_id:',post_id
+        res=mdb.hide_post(post_id,'tieba')
+        print 'res:',res
+    return HttpResponse(res)
+        
+     
