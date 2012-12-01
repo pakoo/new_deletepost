@@ -40,6 +40,11 @@ browser = requests.session()
 gfw = GFW()
 gfw.set(open(os.path.join(os.path.dirname(__file__),'keyword.txt')).read().split('\n'))
 
+lgfw = GFW()
+lgfw.set(['thunder://','magnet:','ed2k://'])
+
+
+
 tongji = """
 <center>
 <script language="javascript" type="text/javascript" src="http://js.users.51.la/5988086.js"></script>
@@ -353,6 +358,7 @@ def get_tieba_post(tieba_name='liyi'):
                 post_info['is_open'] = 0
                 post_info['find_time'] =int(time.time())
             else:
+                is_liang = 0
                 post_soup = BeautifulSoup(post_html,fromEncoding='gbk')
                 """
                 获取帖子总页数
@@ -364,7 +370,8 @@ def get_tieba_post(tieba_name='liyi'):
                     last_page =1
                     print 'just one page this post'
                 """
-                post_info['content'] = get_tieba_reply(post_soup,sort_name=tieba_name,post_url = post_info['url'])
+                post_info['content'],is_liang1 = get_tieba_reply(post_soup,sort_name=tieba_name,post_url = post_info['url'])
+                is_liang = is_liang | is_liang1
                 #print 'post_info:',post_info
                 create_time = post_info['content'][0].get('create_time',time.time())
                 post_info['create_time'] =post_info['content'][0].get('create_time',0) 
@@ -375,23 +382,27 @@ def get_tieba_post(tieba_name='liyi'):
                 #下载第二页
                 if post_html2 is not None and 'closeWindow' not in post_html:
                     post_soup = BeautifulSoup(post_html2,fromEncoding='gbk')
-                    next_content = get_tieba_reply(post_soup,sort_name=tieba_name,post_url = post_info['url'],page=2)
+                    next_content ,is_liang2= get_tieba_reply(post_soup,sort_name=tieba_name,post_url = post_info['url'],page=2)
+                    is_liang = is_liang | is_liang2
                     if next_content:
                         post_info['content'].extend(next_content)
                     post_html3 = get_html(post_url+'?pn=3')
                     #下载第三页
                     if post_html3 is not None and 'closeWindow' not in post_html:
                         post_soup = BeautifulSoup(post_html3,fromEncoding='gbk')
-                        next_content = get_tieba_reply(post_soup,sort_name=tieba_name,post_url = post_info['url'],page=3)
+                        next_content ,is_liang3= get_tieba_reply(post_soup,sort_name=tieba_name,post_url = post_info['url'],page=3)
+                        is_liang = is_liang | is_liang3
                         if next_content:
                             post_info['content'].extend(next_content)
                         post_html4 = get_html(post_url+'?pn=4')
                         #下载第四页
                         if post_html4 is not None and 'closeWindow' not in post_html:
                             post_soup = BeautifulSoup(post_html4,fromEncoding='gbk')
-                            next_content = get_tieba_reply(post_soup,sort_name=tieba_name,post_url = post_info['url'],page=4)
+                            next_content ,is_liang4= get_tieba_reply(post_soup,sort_name=tieba_name,post_url = post_info['url'],page=4)
+                            is_liang = is_liang | is_liang4
                             if next_content:
                                 post_info['content'].extend(next_content)
+                post_info['is_liang']=is_liang
                     
             post_insert(post_info,'tieba')
 
@@ -429,6 +440,7 @@ def get_tieba_reply(post_soup,sort_name,post_url,page=1):
     rcount = 1
     reply_data = []
     author_name = '' 
+    is_liang = 0
     for reply in reply_list:
         #print '>'*150
         #print '第%s楼'%rcount
@@ -470,17 +482,28 @@ def get_tieba_reply(post_soup,sort_name,post_url,page=1):
                 for img in reply_content_img_list:
                     #print 'img src:',img['src']
                     reply_img_insert('tieba',sort_name,img['src'],post_url)
+        
+        content = str(d_post_content)
+        org_content = content.encode('utf-8')
+        filter_title = gfw.replace(org_content)
+        if org_content != filter_title:
+            print '>>>>系统屏蔽了不和谐评论！<<<<'
+            content = '>>>>>>>>>>>系统屏蔽了不和谐评论<<<<<<<<<<'            
+
+        liang_filter = lgfw.replace(org_content)
+        if liang_filter != org_content:
+            is_liang = 1 
 
         reply_info = {'user_name':user_name,
                       'user_id':user_id,
-                      'content':str(d_post_content),
+                      'content':content,
                       'create_time':create_time,
         }
 
         #print 'reply_info:',reply_info
         rcount+=1
         reply_data.append(reply_info)
-    return reply_data
+    return reply_data,is_liang
 
 def check_filter_title():
     post_list=tieba.post.find({'is_open':0},limit=50,skip=0,sort=[('find_time',DESCENDING)])
