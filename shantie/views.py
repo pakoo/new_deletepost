@@ -299,10 +299,9 @@ def remove_tieba_post(request):
     删除帖子
     """
     user_session =request.session 
-    #print 'user_session is_login:',user_session.get('is_login',0)
-    #if user_session.get('is_login',0) != 1: 
-    #    return HttpResponse('不要做坏事哦!')
-    page=int(page)
+    print 'user_session is_login:',user_session.get('is_login',0)
+    if user_session.get('is_login',0) != 1: 
+        return HttpResponse('不要做坏事哦!')
     post_url = request.POST['url']
     print 'post_url:',post_url
     if post_url:
