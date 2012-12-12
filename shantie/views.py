@@ -58,19 +58,20 @@ def get_html(url):
 def mainpage(request):
     #print 'session id:',request.session['sessionid']
     print 'cookie:',request.COOKIES
-    res =  request.session.test_cookie_worked()
-    if res:
-        print 'test cookie:',res
-    else:
-        request.session.set_test_cookie()
-    uid = request.session.get('uid',None)
-    if uid:
-        print 'session uid:',uid
-    else:
-        request.session['uid'] = random.random()
-    response  = render_to_response('mainpage.html', {}) 
-    response.set_cookie("my_cookie",'cookie value')
-    return response
+    #res =  request.session.test_cookie_worked()
+    #if res:
+    #    print 'test cookie:',res
+    #else:
+    #    request.session.set_test_cookie()
+    #uid = request.session.get('uid',None)
+    #if uid:
+    #    print 'session uid:',uid
+    #else:
+    #    request.session['uid'] = random.random()
+    #response  = render_to_response('mainpage.html', {}) 
+    #response.set_cookie("my_cookie",'cookie value')
+    #return response
+    return HttpResponseRedirect('/real/1/')
 
 
 def xkds_mainpage(request):
@@ -124,6 +125,31 @@ def diba(request,page):
     #    print "发现傻逼IE!!!!!!!!!!!!!"
     #    return render('diba.html',post_data)
     return render('hero.html',post_data)
+
+def real(request,page):
+    print 'page:',page
+    agent = request.META.get('HTTP_USER_AGENT','')
+    page=int(page)
+    frontpage='/real/%s/'%(page-1)
+    nextpage='/real/%s/'%(page+1)
+    res = mdb.get_tieba_today_hot_post_url(page=page)
+    #print 'data:',data
+    if not res:
+        return HttpResponse('no delete post')
+    else:
+        data,hot_post,total_amount=res
+    post_data={'posts':data,
+               'total_amount':total_amount,
+               'hot_post':hot_post,
+                }
+    if page >1:
+        post_data['frontpage']=frontpage
+    else:
+        post_data['frontpage']=None
+    post_data['nextpage']=nextpage
+    post_data['real']='active'
+    return render('hero.html',post_data)
+
 
 
 def kds_backend(request,page):
@@ -269,6 +295,14 @@ def get_tieba_post(request,post_url):
 
 @csrf_exempt    
 def remove_tieba_post(request):
+    """
+    删除帖子
+    """
+    user_session =request.session 
+    #print 'user_session is_login:',user_session.get('is_login',0)
+    #if user_session.get('is_login',0) != 1: 
+    #    return HttpResponse('不要做坏事哦!')
+    page=int(page)
     post_url = request.POST['url']
     print 'post_url:',post_url
     if post_url:
@@ -280,6 +314,10 @@ def remove_tieba_post(request):
 
 @csrf_exempt    
 def remove_kds_post(request):
+    user_session =request.session 
+    print 'user_session is_login:',user_session.get('is_login',0)
+    if user_session.get('is_login',0) != 1: 
+        return HttpResponse('不要做坏事哦!')
     post_url = request.POST['url']
     print 'post_url1:',post_url
     if post_url:

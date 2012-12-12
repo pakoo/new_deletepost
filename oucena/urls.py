@@ -12,8 +12,9 @@ urlpatterns = patterns('',
     # Examples:
 #     url(r'^search/(?P<qs>\w+)/$', 'hotkw.kw.views.getPic'),
      url(r'^neihan$', 'shantie.views.zhongzi'),
-     url(r'^save/(?P<url>.+)', 'shantie.views.save_html'),
+     #url(r'^save/(?P<url>.+)', 'shantie.views.save_html'),
      url(r'^$', 'shantie.views.mainpage'),
+     url(r'^real/(?P<page>\d+)', 'shantie.views.real'),
 
 
      url(r'^kds$', 'shantie.views.xkds_mainpage'),
