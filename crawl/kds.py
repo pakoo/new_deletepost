@@ -24,7 +24,7 @@ from pymongo import ASCENDING,DESCENDING
 import requests
 mktime=lambda dt:time.mktime(dt.utctimetuple())
 ######################db.init######################
-connection = pymongo.Connection('localhost', 27017)
+connection = pymongo.Connection('404cn.org', 27017)
 
 kds=connection.kds
 post=kds.post
@@ -486,9 +486,9 @@ def get_tieba_reply(post_soup,sort_name,post_url,page=1):
         content = str(d_post_content)
         org_content = content.encode('utf-8')
         filter_title = gfw.replace(org_content)
-        if org_content != filter_title:
-            print '>>>>系统屏蔽了不和谐评论！<<<<'
-            content = '>>>>>>>>>>>系统屏蔽了不和谐评论<<<<<<<<<<'            
+        #if org_content != filter_title:
+        #    print '>>>>系统屏蔽了不和谐评论！<<<<'
+        #    content = '>>>>>>>>>>>系统屏蔽了不和谐评论<<<<<<<<<<'            
 
         liang_filter = lgfw.replace(org_content)
         if liang_filter != org_content:
@@ -529,22 +529,22 @@ def get_tieba_info(tieba_name='liyi'):
 
 
 if __name__ == "__main__":
-    #while True:
-    #    try:
-    #        get_tieba_post("liyi")
-    #        #get_tieba_post("wow")
-    #        #get_tieba_post("meinv")
-    #        #get_kds_post()
-    #    except Exception,e:
-    #        print('\n'*9)
-    #        traceback.print_exc()
-    #        print('\n'*9)
+    while True:
+        try:
+            get_tieba_post("liyi")
+            #get_tieba_post("wow")
+            #get_tieba_post("meinv")
+            #get_kds_post()
+        except Exception,e:
+            print('\n'*9)
+            traceback.print_exc()
+            print('\n'*9)
 #print get_kds_post_reply('http://club.pchome.net/thread_1_15_7030170.html') #main()
 #    print save_post('thread_1_15_6751208__.html','test1',kds)
 #    print transtime('11-11-13 12:30')
 #    para={'user_id': u'234', 'img': '', 'title': u'\u5ac2\u5b50\u5728\u6211\u5e8a\u4e0a\u8fc7\u4e86\u4e00\u591c......', 'url': u'thread_1_15_6746441__.html', 'is_open:': 1, 'content': '', 'create_time': u'11-12-13 10:30', 'cotent':''}
 #    post_insert(para,db=kds)
-    print get_tieba_post("liyi")
+    #print get_tieba_post("liyi")
     #print get_kds_post()
     #check_filter_title()
 
