@@ -3,7 +3,10 @@
 
 {% block title %}{{group_name|default:'后台'}}管理{% endblock %}
 
-{% block navbar %}<li class = "{{liuyan|default:""}}"><a href="/liuyan">留言列表</a></li> {% endblock %}
+{% block navbar %}
+    <li class = "{{liuyan|default:""}}"><a href="/liuyan">留言列表</a></li> 
+    <li class = "{{hot|default:""}}"><a href="/hot/1">最热</a></li> 
+{% endblock %}
 
 {% block content %}
 <div class="container">

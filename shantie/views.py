@@ -177,7 +177,13 @@ def tieba_backend(request,page):
 
 
 def tieba_today_hot(request,page):
+    #print 'session id:',request.session['sessionid']
     print 'page:',page
+    user_session =request.session 
+    print 'user_session is_login:',user_session.get('is_login',0)
+    #if user_session.get('sessionid',0):
+    if user_session.get('is_login',0) != 1: 
+        return HttpResponseRedirect('/admin')
     page=int(page)
     frontpage='/tieba/hot/%s/'%(page-1)
     nextpage='/tieba/hot/%s/'%(page+1)
@@ -194,8 +200,30 @@ def tieba_today_hot(request,page):
     else:
         post_data['frontpage']=None
     post_data['nextpage']=nextpage
+    post_data['hot']='active'
         
-    return render('tieba_backend.html',post_data)
+    return render('manage.html',post_data)
+
+#def tieba_today_hot(request,page):
+#    print 'page:',page
+#    page=int(page)
+#    frontpage='/tieba/hot/%s/'%(page-1)
+#    nextpage='/tieba/hot/%s/'%(page+1)
+#    res = mdb.get_tieba_today_hot_post_url(page=page)
+#    #print 'data:',data
+#    if not res:
+#        return HttpResponse('no delete post')
+#    else:
+#        data,hot_post,post_amount=res
+#    post_data={'posts':data}
+#    post_data['total_amount']=post_amount
+#    if page >1:
+#        post_data['frontpage']=frontpage
+#    else:
+#        post_data['frontpage']=None
+#    post_data['nextpage']=nextpage
+#        
+#    return render('tieba_backend.html',post_data)
 
 
 def search_post(request,keyword,page):
