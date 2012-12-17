@@ -20,7 +20,7 @@ tieba=con.tieba
 db_web = con.web
 #db_post=kds.post
 #db_fs=gridfs.GridFS(kds,'postfile')
-debug_flag = 0 
+debug_flag = 0
 ######################db.init######################
 def transUinxtime2Strtime(utime,type=0):
 #    stime=time.strftime("%a, %d %b",time.localtime(utime))
@@ -98,6 +98,7 @@ def get_tieba_delete_post_url(page,count=50):
                           p['user_name'],
                           item_num,
                           p['click'],
+                          p.get('is_liang',0),
                           ]
                           )
             item_num+=1
