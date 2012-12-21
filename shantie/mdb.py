@@ -136,9 +136,35 @@ def get_tieba_today_hot_post_url(page,count=50):
     else:
         return None
 
-def get_tieba_post_reply(url,dbname):
+def get_filter_post_url(page,count=50):
     """
-    获取帖子的回复信息
+    获取被和谐过的帖子列表 
+    """
+    now = int(time.time())
+    result=[]
+    hot_post = get_hot_post('tieba')
+    hot_post_list=tieba.post.find({'is_open':-9},limit=count,skip=count*(page-1),sort=[('create_time',DESCENDING)])
+    if hot_post_list.count()>0:
+        item_num=0
+        for p in hot_post_list:
+            print 'post:',p['url']
+            result.append([
+                          "/fuli/%s"%p['url'],
+                          p['title'],
+                          transUinxtime2Strtime(p['find_time']),
+                          p['user_name'],
+                          item_num,
+                          p['click'],
+                          ]
+                          )
+            item_num+=1
+        return result,hot_post,tieba.post.count()
+    else:
+        return None
+
+def get_tieba_post_reply(url,dbname,is_open=0):
+    """
+    获取帖子的内容
     """
     if dbname == 'tieba':
         tieba_url_root = "http://tieba.baidu.com/p"
@@ -146,7 +172,7 @@ def get_tieba_post_reply(url,dbname):
         tieba_url_root = "http://club.pchome.net"
 
     db_reply = con[dbname].post
-    res = db_reply.find_one({'url':url})
+    res = db_reply.find_one({'url':url,'is_open':is_open})
     if res:
         db_reply.update({'url':url},{'$inc':{'click':1}})
         db_reply.update({'url':url},{'$set':{'last_click_time':int(time.time())}})

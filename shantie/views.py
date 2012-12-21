@@ -127,6 +127,9 @@ def diba(request,page):
     return render('hero.html',post_data)
 
 def real(request,page):
+    """
+    返回玩家正在看得帖子
+    """
     print 'page:',page
     agent = request.META.get('HTTP_USER_AGENT','')
     page=int(page)
@@ -150,6 +153,38 @@ def real(request,page):
     post_data['real']='active'
     return render('hero.html',post_data)
 
+
+def filter_post_list(request,page):
+    """
+    返回被和谐的帖子列表
+    """
+    user_session =request.session 
+    print 'user_session is_login:',user_session.get('is_login',0)
+    #if user_session.get('sessionid',0):
+    if user_session.get('is_login',0) != 1: 
+        return HttpResponseRedirect('/admin')
+    print 'page:',page
+    agent = request.META.get('HTTP_USER_AGENT','')
+    page=int(page)
+    frontpage='/filter/%s/'%(page-1)
+    nextpage='/filter/%s/'%(page+1)
+    res = mdb.get_filter_post_url(page=page)
+    #print 'data:',data
+    if not res:
+        return HttpResponse('no delete post')
+    else:
+        data,hot_post,total_amount=res
+    post_data={'posts':data,
+               'total_amount':total_amount,
+               'hot_post':hot_post,
+                }
+    if page >1:
+        post_data['frontpage']=frontpage
+    else:
+        post_data['frontpage']=None
+    post_data['nextpage']=nextpage
+    post_data['filter']='active'
+    return render('manage.html',post_data)
 
 
 def kds_backend(request,page):
@@ -283,15 +318,31 @@ def get_kds_post(request,post_url):
         #return HttpResponse('post have be delete')
 
 def get_tieba_post(request,post_url):
+    """
+    返回帖子内容
+    """
     print "post_url:",post_url
-    reply_info=get_tieba_post_reply(int(post_url),'tieba')
+    reply_info=get_tieba_post_reply(int(post_url),'tieba',mdb.debug_flag)
     hot_post = mdb.get_hot_post('tieba')
     if reply_info:
         return render('tieba.html',{'data':reply_info,'title':reply_info['title'],'floor':1,'hot_post':hot_post})
     else:
-        return HttpResponseRedirect('/tieba/1/')
+        return HttpResponseRedirect('/real/1/')
         #return HttpResponse('post have be delete')
         
+
+def get_filter_post(request,post_url):
+    """
+    返回被和谐的帖子
+    """
+    print "post_url:",post_url
+    reply_info=get_tieba_post_reply(int(post_url),'tieba',-9)
+    hot_post = mdb.get_hot_post('tieba')
+    if reply_info:
+        return render('tieba.html',{'data':reply_info,'title':reply_info['title'],'floor':1,'hot_post':hot_post})
+    else:
+        return HttpResponseRedirect('/real/1/')
+        #return HttpResponse('post have be delete')
 
 @csrf_exempt    
 def remove_tieba_post(request):
@@ -437,6 +488,11 @@ def advice_message(request):
     """
     留言板信息
     """
+    user_session =request.session 
+    print 'user_session is_login:',user_session.get('is_login',0)
+    #if user_session.get('sessionid',0):
+    if user_session.get('is_login',0) != 1: 
+        return HttpResponseRedirect('/admin')
     message = mdb.get_advice()
     return render('advice_board.html',{'mlist':message})
 

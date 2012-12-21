@@ -15,6 +15,7 @@ urlpatterns = patterns('',
      #url(r'^save/(?P<url>.+)', 'shantie.views.save_html'),
      url(r'^$', 'shantie.views.mainpage'),
      url(r'^real/(?P<page>\d+)', 'shantie.views.real'),
+     url(r'^filter/(?P<page>\d+)', 'shantie.views.filter_post_list'),
 
 
      url(r'^kds$', 'shantie.views.xkds_mainpage'),
@@ -40,6 +41,7 @@ urlpatterns = patterns('',
      url(r'^xlogout', 'shantie.views.admin_logout'),
      url(r'^add_advice', 'shantie.views.send_advice'),
      url(r'^liuyan', 'shantie.views.advice_message'),
+     url(r'^fuli/(?P<post_url>\w+)', 'shantie.views.get_filter_post'),
 #    
     # url(r'^hotkw/', include('hotkw.foo.urls')),
 
