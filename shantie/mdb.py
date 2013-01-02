@@ -84,7 +84,7 @@ def get_tieba_delete_post_url(page,count=50):
     print 'a'
     result=[]
     hot_post = get_hot_post('tieba')
-    delete_post_list=tieba.post.find({'is_open':debug_flag,'tieba_name':'liyi'},limit=count,skip=count*(page-1),sort=[('find_time',DESCENDING)])
+    delete_post_list=tieba.post.find({'is_open':debug_flag,'tieba_name':'liyi'},{'url':1,'title':1,'find_time':1,'user_name':1,'click':1,'is_liang':1},limit=count,skip=count*(page-1),sort=[('find_time',DESCENDING)])
     #print 'delete_post_list:',delete_post_list
     #print 'delete_post_amount:',delete_post_list.count()
     if delete_post_list.count()>0:
@@ -115,7 +115,7 @@ def get_tieba_today_hot_post_url(page,count=50):
     hot_post = get_hot_post('tieba')
     hot_post_list=tieba.post.find({'is_open':debug_flag,
                                    'last_click_time':{'$lt':now,'$gt':now-24*3600}
-                                  },limit=count,skip=count*(page-1),sort=[('last_click_time',DESCENDING)])
+                                  },{'url':1,'title':1,'find_time':1,'user_name':1,'click':1,'is_liang':1},limit=count,skip=count*(page-1),sort=[('last_click_time',DESCENDING)])
     #print 'hot_post_list:',hot_post_list
     #print 'hot_post_amount:',hot_post_list.count()
     if hot_post_list.count()>0:
