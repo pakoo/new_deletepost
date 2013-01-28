@@ -27,6 +27,19 @@ import time
 #    print 'argv:',dir(kwargs['signal']),
 #    print ">>>>>>>>>>>>>>>>>>>>>>>又完成了一个请求!!!" 
 #    print "page view=%s"%pv
+def is_login(func) :
+    """
+    判断用户是否登录
+    """
+    def check(request,*args,**kargs):
+        user_session =request.session 
+        print 'user_session is_login:',user_session.get('is_login',0)
+        #if user_session.get('sessionid',0):
+        if user_session.get('is_login',0) != 1: 
+            return HttpResponseRedirect('/admin')
+        else:
+            func(request,*args,**kargs) 
+    return check
 
 def deflate(data):
     try:
@@ -488,20 +501,16 @@ def send_advice(request):
     else:
         mdb.add_advice(content,nick_name,ip)
     return HttpResponse('给站长留言成功!')
-
+@is_login
 def advice_message(request):
     """
     留言板信息
     """
-    user_session =request.session 
-    print 'user_session is_login:',user_session.get('is_login',0)
-    #if user_session.get('sessionid',0):
-    if user_session.get('is_login',0) != 1: 
-        return HttpResponseRedirect('/admin')
     message = mdb.get_advice()
     return render('advice_board.html',{'mlist':message})
 
 @csrf_exempt    
+@is_login
 def hide_post(request):
     """
     隐藏帖子
@@ -564,15 +573,12 @@ def write_reply(request):
         return  HttpResponse('添加失败')
         
 @csrf_exempt    
+@is_login
 def remove_tu(request):
     """
     删除图片
     """
     print '================>>>>>>>>>>>>remove_tu'
-    user_session =request.session 
-    print 'user_session is_login:',user_session.get('is_login',0)
-    if user_session.get('is_login',0) != 1: 
-        return HttpResponse('不要做坏事哦!')
     post_url = request.POST['url']
     print 'post_url:',post_url
     if post_url:
@@ -591,15 +597,11 @@ def tu_manage(request,page=1):
     return render('tu_manage.html',{'img_list':img_list,'manage_tu':'active','frontpage':page-1,'nextpage':page+1})
 
 @csrf_exempt    
+@is_login
 def hide_tu(request):
     """
     删除图片
     """
-    print '================>>>>>>>>>>>>hide_tu'
-    user_session =request.session 
-    print 'user_session is_login:',user_session.get('is_login',0)
-    if user_session.get('is_login',0) != 1: 
-        return HttpResponse('不要做坏事哦!')
     post_url = request.POST['url']
     print 'post_url:',post_url
     if post_url:
