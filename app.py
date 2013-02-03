@@ -24,6 +24,29 @@ text_tmp = """
 </xml> 
             """
 
+news_tmp = """
+<xml>
+    <ToUserName><![CDATA[%s]]></ToUserName>
+    <FromUserName><![CDATA[%s]]></FromUserName>
+    <CreateTime>%s</CreateTime>
+    <MsgType><![CDATA[news]]></MsgType>
+    <Content><![CDATA[]]></Content>
+    <ArticleCount>%s</ArticleCount>
+    <Articles>
+    %s
+    </Articles>
+</xml> 
+           """
+
+item_tmp = """
+    <item>
+        <Title><![CDATA[%s]]></Title>
+        <Description><![CDATA[%s]]></Description>
+        <PicUrl><![CDATA[%s]]></PicUrl>
+        <Url><![CDATA[%s]]></Url>
+    </item>
+           """
+
 def get_pm(place):
     res = db.find_one({'location':place},sort=[('create_time',DESCENDING)])    
     if res:
@@ -75,29 +98,37 @@ class  weixin(tornado.web.RequestHandler):
         logging.info('arguments:%s'%str(self.get_arguments('echostr','')))
         print 'echostr:',self.get_arguments('echostr','')
         self.finish(self.get_argument('echostr',''))
+        #items = [('title1','description1','http://oucena.com/static/img/bt.jpg','http://oucena.com/')]  
+        #items_str = '\n'.join([item_tmp%i for i in items])
+        #logging.info(items_str)
+        #res = news_tmp%('asd','sdf',1287324,len(items),items_str) 
+        #self.finish(res)
 
     def post(self):
         if self.msgtype == 'text':
-            if self.wxtext == '1':
+            if self.wxtext in ('1','shanghai','上海') :
                 res = get_pm('shanghai')
                 pm25 = res['data']
                 ctime = str(res['publish_time'])
                 place = '上海'
-            elif self.wxtext == '2':
+            elif self.wxtext in ('2','北京','beijing'):
                 res = get_pm('beijing')
                 pm25 = res['data']
                 ctime = str(res['publish_time'])
                 place = '北京'
-            elif self.wxtext == '3':
+            elif self.wxtext in ('3','广州','guangzhou'):
                 res = get_pm('guangzhou')
                 pm25 = res['data']
                 ctime = str(res['publish_time'])
                 place = '广州'
-            elif self.wxtext == '4':
+            elif self.wxtext in ('4','成都','chengdu'):
                 res = get_pm('chengdu')
                 pm25 = res['data']
                 ctime = str(res['publish_time'])
                 place = '成都'
+            elif self.wxtext == '5':
+                items = [('title1','description1','http://oucena.com/static/img/bt.jpg','http://oucena.com/')]  
+                self.send_news(items)
             else:
                 a = """发送 “1”查询上海 美国领事馆发布的 pm2.5 数据
                      \n发送 “2”查询北京 美国领事馆发布的 pm2.5 数据
@@ -117,6 +148,16 @@ class  weixin(tornado.web.RequestHandler):
         #self.set_header("Content-Type","application/xml; charset=UTF-8")
         line = text_tmp%(self.userid,self.myid,int(time.time()),msg) 
         self.finish(line)
+
+    def send_news(self,items):
+        """
+        发送图文
+        """
+        items_str = '\n'.join([item_tmp%i for i in items])
+        logging.info(items_str)
+        res = news_tmp%(self.userid,self.myid,int(time.time()),len(items),items_str) 
+        self.finish(res)
+        
             
 class Application(tornado.web.Application):
     def __init__(self):
@@ -125,10 +166,12 @@ class Application(tornado.web.Application):
         }
         handlers = [
             (r'/',weixin),
+            (r"/static/(.*)", tornado.web.StaticFileHandler, {"path": "./static"}),
         ]
         tornado.web.Application.__init__(self,handlers,**app_settings)
 
 if __name__ == '__main__':
     http_server = tornado.httpserver.HTTPServer(request_callback=Application())
-    http_server.listen(7070)
+    http_server.listen(8080)
+
     tornado.ioloop.IOLoop.instance().start()

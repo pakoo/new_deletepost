@@ -14,7 +14,7 @@ import tornado.web
 import tornado.wsgi
 import app
 
-define('port', type=int, default=80)
+define('port', type=int, default=8080)
 
 class HelloHandler(tornado.web.RequestHandler):
     def get(self):
@@ -29,7 +29,9 @@ def main():
         ])
     tornado_app.add_handlers(r"oucena\.com", [
     (r"/", app.weixin),
-])
+    (r"/static/(.*)", tornado.web.StaticFileHandler, {"path": "./static"}),
+    ])
+
     server = tornado.httpserver.HTTPServer(tornado_app)
     server.listen(options.port)
     tornado.ioloop.IOLoop.instance().start()
