@@ -14,7 +14,7 @@ import tornado.web
 import tornado.wsgi
 import app
 
-define('port', type=int, default=8080)
+define('port', type=int, default=80)
 
 class HelloHandler(tornado.web.RequestHandler):
     def get(self):
