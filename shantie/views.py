@@ -1,4 +1,4 @@
-﻿# -*- coding: utf-8 -*-
+﻿ #-*- coding: utf-8 -*-
 from django.template import loader ,Context
 from django.http import HttpResponse , HttpResponseRedirect
 from django.shortcuts import render_to_response as render,render_to_response
@@ -38,7 +38,7 @@ def is_login(func) :
         if user_session.get('is_login',0) != 1: 
             return HttpResponseRedirect('/admin')
         else:
-            func(request,*args,**kargs) 
+            return func(request,*args,**kargs) 
     return check
 
 def deflate(data):
@@ -121,7 +121,7 @@ def diba(request,page):
     res = get_tieba_delete_post_url(page=page)
     #print 'data:',data
     if not res:
-        return HttpResponse('no delete post')
+        return render('hero.html',{})
     else:
         data,hot_post,total_amount=res
     post_data={'posts':data,
@@ -152,7 +152,7 @@ def real(request,page):
     res = mdb.get_tieba_today_hot_post_url(page=page)
     #print 'data:',data
     if not res:
-        return HttpResponse('no delete post')
+        return render('hero.html',{})
     else:
         data,hot_post,total_amount=res
     post_data={'posts':data,
@@ -608,3 +608,99 @@ def hide_tu(request):
         res=mdb.hide_tu(post_url)
         print 'res:',res
     return HttpResponse(res)
+
+def register(request):
+    """
+    注册页面
+    """
+
+    request.session['return_url']=request.META['HTTP_REFERER']
+    return render('register.html',{})
+
+
+@csrf_exempt    
+def create_new_user(request):
+    """
+    注册
+    """
+    ip = request.META['REMOTE_ADDR']
+    username = request.POST.get('username','').strip()
+    password = request.POST.get('password','').strip()
+    return_url = request.session['return_url']
+    print 'return_url  url:',request.session['return_url']
+    if username and password:
+        uid = mdb.create_user(username,password,ip)
+        print 'uid:',uid
+        return_path = return_url.split('/',3)[-1]
+        if uid:
+            #print 'return  path:',return_path
+            if return_path.replace('/','') == 'register':
+                return_url = '/'
+            else:
+                return_url = '/'+return_path
+            request.session['is_login']=1
+            request.session['name']=username
+            request.session['uid']=uid
+            #print 'return url:',return_url
+            response  = render_to_response('info.html', {'content':"注册成功!",'title':'注册成功','return_url':return_url}) 
+            response.set_cookie("username",username)
+            return response
+        else:
+            pass
+    else:
+        pass
+    return HttpResponse('fail')
+
+def login_page(request):
+    """
+    登录页面 
+    """
+    refer_url = request.META['HTTP_REFERER']
+    return_path = refer_url.split('/',3)[-1]
+    if return_path.replace('/','') == 'userlogin':
+        return_url = '/'
+    else:
+        return_url = '/'+return_path
+    request.session['return_url']=return_url
+    print 'return_url:',return_url
+    return render('login.html',{})
+
+def user_logout(request):
+    """
+    用户登出
+    """
+    request.session['is_login']=0
+    #response  = render_to_response('info.html', {'content':"退出登录成功!",'title':'登出','return_url':'/'}) 
+    response = real(request,1)
+    response.set_cookie("username",'')
+    return response
+
+@csrf_exempt    
+def user_login(request):
+    """
+    用户登录
+    """
+    username = request.POST.get('username','').strip()
+    password = request.POST.get('password','').strip()
+    uid = mdb.check_login(username,password)
+    if uid:
+        request.session['is_login']=1
+        request.session['name']=username
+        request.session['uid']=uid
+        response  = render_to_response('info.html', {'content':"登录成功!",'title':'登录成功','return_url':request.session['return_url']}) 
+        response.set_cookie("username",username)
+        return response
+    else:
+        response  = render_to_response('info.html', {'content':"密码错误!",'title':'失败','return_url':'/userlogin'}) 
+        return response
+        
+        
+
+def info(request):
+    """
+    提示页面
+    """
+    return render('info.html',{'content':"这是一个神奇的敌方!"})
+
+
+

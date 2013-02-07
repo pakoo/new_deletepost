@@ -37,6 +37,12 @@ urlpatterns = patterns('',
      url(r'^tieba/hide$', 'shantie.views.hide_post'),
      url(r'^tieba/hot/(?P<page>\d+)', 'shantie.views.tieba_today_hot'),
      url(r'^writereply$', 'shantie.views.write_reply'),
+     url(r'^register/$', 'shantie.views.register'),
+     url(r'^adduser/$', 'shantie.views.create_new_user'),
+     url(r'^logout$', 'shantie.views.user_logout'),
+     url(r'^userlogin$', 'shantie.views.login_page'),
+     url(r'^login$', 'shantie.views.user_login'),
+     url(r'^info/$', 'shantie.views.info'),
 
 
      url(r'^search/(?P<keyword>\w+)/(?P<page>\d+)', 'shantie.views.search_post'),

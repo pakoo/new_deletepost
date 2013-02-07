@@ -27,6 +27,7 @@
     <link rel="apple-touch-icon-precomposed" sizes="114x114" href="/static/ico/apple-touch-icon-114-precomposed.png">
     <link rel="apple-touch-icon-precomposed" sizes="72x72" href="/static/ico/apple-touch-icon-72-precomposed.png">
     <link rel="apple-touch-icon-precomposed" href="/static/ico/apple-touch-icon-57-precomposed.png">
+    {% block addcss %}{% endblock %}
   </head>
  
     <body>
@@ -50,6 +51,13 @@
                 <li class = "{{advice|default:""}}"><a href="/advice">留言板</a></li>
                 {% block navbar %}{% endblock %}
                 </ul>
+
+                <ul class="nav pull-right">
+                <li id="loginli"><a href="/userlogin" id="logina">登陆</a></li>
+                <li class="divider-vertical"></li>
+                <li id="registerli" class="dropdown"><a href="/register/" id="registera">注册</a></li>
+                </ul>
+
                 </div><!--/.nav-collapse -->
             </div>
         </div>
@@ -65,6 +73,7 @@
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="/static/js/jquery.js"></script>
+    <script src="/static/js/jquery.cookie.js"></script>
     <script src="/static/js/bootstrap-transition.js"></script>
     <script src="/static/js/bootstrap-alert.js"></script>
     <script src="/static/js/bootstrap-modal.js"></script>
@@ -92,6 +101,19 @@
         ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
         var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
       })();
+
+    $(document).ready(function(){
+    var username = $.cookie('username');
+    var menu = "<a href='#' class='dropdown-toggle' data-toggle='dropdown'>"+username+"<b class='caret'></b></a><ul class='dropdown-menu'><li><a href='/tu/1/'>去看看福利图</a></li><li class='divider'></li><li><a href='/logout'>登出</a></li>"
+    if (username.length)
+        {
+        $("#loginli").html('<a href="#">帐号名:</a>')
+        $("#registerli").html(menu)
+        }
+    //else
+    //    alert("not fount username");
+        
+    });
     </script>
 </html>
 

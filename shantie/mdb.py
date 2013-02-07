@@ -12,6 +12,7 @@ import gridfs
 import time
 import os
 from hashlib import md5
+from datetime import datetime
 mktime=lambda dt:time.mktime(dt.utctimetuple())
 ######################db.init######################
 #con = pymongo.Connection('199.15.113.215', 27017)
@@ -368,6 +369,47 @@ def hide_tu(url):
     """
     con['tieba'].img.update({'url':url},{'$set':{'is_open':9}})
     
+def create_user(username,password,ip):
+    """
+    创建新用户
+    """
+    res = tieba.user.find_one({'name':username})
+    if res:
+        return
+    else:
+        uid = tieba.incnum.find_and_modify(
+                                        query={'_id':'user'},
+                                        update={'$inc':{'seq':1}},
+                                        upsert=True,
+                                        new=True,
+        )['seq']
+        tieba.user.insert(
+                            {
+                            '_id':uid,
+                            'name':username,
+                            'password':password,
+                            'score':password,
+                            'register_time':datetime.now(),
+                            'register_ip':ip,
+                            'last_login_time':datetime.now(),
+                            'last_login_ip':ip,
+                            'stats':{
+                                    'issue':0,
+                                    'reply':0,
+                                    'view':0,
+                                    }
+                            }
+        )
+        return uid
+
+def check_login(username,password):
+    """
+    检查用户名密码
+    """
+    res = tieba.user.find_one({'name':username,'password':password},{'_id':1})
+    if res:
+        return res['_id']
+
 
 if __name__ == "__main__":
     pass
@@ -382,4 +424,5 @@ if __name__ == "__main__":
     #add_advice('test','admin')
     #print get_advice()
     #get_tu()
-    delete_tu('52c564201d41c87a14000000')
+    #delete_tu('52c564201d41c87a14000000')
+    #create_user('oucena','asdf','127.0.0.1')
