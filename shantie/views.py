@@ -618,19 +618,21 @@ def register(request):
     注册页面
     """
     user_session = request.session
-    user_session['return_url']=request.META['HTTP_REFERER']
+    user_session['return_url']=request.META.get('HTTP_REFERER','')
     print 'register session last_request:',user_session.get('last_request','')
     print 'register session username_input_error:',user_session.get('username_input_error','')
     if user_session.get('last_request','') == 'create_user':
-        if user_session.get('username_input_error',''):
-            error_data = {'name_status':'inputError','error_name':user_session['username_input_error'],'status':'error'}
-            user_session['username_input_error'] = ''    
+        if user_session.get('error_input',''):
+            error_data = {'error_input':user_session['error_input'],'error_name':user_session['username_input_error'],'error_reason':user_session['error_reason']}
+            user_session['username_input_error'] = ''
+            user_session['error_input'] = ''
             user_session['last_request'] = ''
             print 'error_data:',error_data
             return render('register.html',error_data)
         elif user_session.get('password_input_error',''):
-            error_data = {'password_status':'inputError','status':'error'}
-            user_session['password_input_error'] = ''    
+            error_data = {'error_input':user_session['error_input'],'error_name':user_session['username_input_error'],'error_reason':user_session['error_reason']}
+            user_session['username_input_error'] = ''
+            user_session['error_input'] = ''
             user_session['last_request'] = ''
             print 'error_data:',error_data
             return render('register.html',error_data)
@@ -648,21 +650,34 @@ def create_new_user(request):
     return_url = request.session['return_url']
     rname = deepcopy(request.POST.get('username',''))
     print 'return_url  url:',request.session['return_url']
+    print 'username:',username
+    print 'password:',password
     if username and password:
         username_unicode  = username.decode()
         password_unicode  = password.decode()
         #检测用户名合法性,只能是1-8位的中文数字英文
         print 'name res:',chars.is_valid_user_name(username_unicode),len(username_unicode)
         print 'pwd res:',chars.is_num_str(password_unicode),len(password_unicode)
-        if chars.is_valid_user_name(username_unicode) == False or 0>=len(username_unicode) or len(username_unicode)>8:
-            username_error = True
-            request.session['username_input_error']=username
-            request.session['last_request']='create_user'
-            return  HttpResponseRedirect('/register')
+        if chars.is_valid_user_name(username_unicode) == False :
+            print '用户名字符不对'
+            request.session['error_input']='用户名'
+            request.session['error_reason']='用户名只能是英文数字或中文!'
+        elif len(username_unicode)>8:
+            print '用户名长度不对'
+            request.session['error_reason']='用户名长度最多8位!'
+            request.session['error_input']='用户名'
         #检测用户名合法性,只能是1-6位的数字英文
-        if chars.is_num_str(password_unicode) == False or 0>=len(password_unicode) or len(password_unicode)>6:
-            password_error = True
-            request.session['password_input_error']=1
+        if chars.is_num_str(password_unicode) == False :
+            print '密码字符不对'
+            request.session['error_reason']='密码只能为英文或数字'
+            request.session['error_input']='密码'
+        elif len(password_unicode)<6:
+            print '密码长度不对'
+            request.session['error_reason']='密码长度至少需要6位!'
+            request.session['error_input']='密码'
+
+        if request.session.get('error_input',''):
+            request.session['username_input_error']=username
             request.session['last_request']='create_user'
             return  HttpResponseRedirect('/register')
 
@@ -670,8 +685,9 @@ def create_new_user(request):
         print 'uid:',uid
         return_path = return_url.split('/',3)[-1]
         if uid:
+            #用户名是否已存在
             #print 'return  path:',return_path
-            if return_path.replace('/','') in ('register','logout'):
+            if return_path.replace('/','') in ('register','logout','userlogin'):
                 return_url = '/'
             else:
                 return_url = '/'+return_path
@@ -681,14 +697,21 @@ def create_new_user(request):
             #print 'return url:',return_url
             response  = render_to_response('info.html', {'content':"注册成功!",'title':'注册成功','return_url':return_url}) 
             print 'cookie name:',username
-            response.set_cookie("username",repr(rname))
-            #response.set_cookie("username",smart_unicode(rname))
+            #response.set_cookie("username",repr(rname))
+            response.set_cookie("username",smart_unicode(username),4000)
             return response
         else:
-            pass
+            request.session['error_reason']='用户名已存在'
+            request.session['error_input']='用户名'
+            request.session['username_input_error']=username
+            request.session['last_request']='create_user'
+            return  HttpResponseRedirect('/register')
     else:
-        pass
-    return HttpResponse('fail')
+        request.session['error_reason']=''
+        request.session['error_input']='用户名和密码不能为空'
+        request.session['username_input_error']=username
+        request.session['last_request']='create_user'
+        return  HttpResponseRedirect('/register')
 
 def login_page(request):
     """
@@ -696,7 +719,7 @@ def login_page(request):
     """
     refer_url = request.META['HTTP_REFERER']
     return_path = refer_url.split('/',3)[-1]
-    if return_path.replace('/','') in ('userlogin','logout'):
+    if return_path.replace('/','') in ('userlogin','logout','register'):
         return_url = '/'
     else:
         return_url = '/'+return_path
@@ -739,7 +762,10 @@ def info(request):
     """
     提示页面
     """
-    return render('info.html',{'content':"这是一个神奇的敌方!"})
+    user_session = request.session
+    response = render_to_response('info.html',{'content':"这是一个神奇的敌方!"})
+    response.set_cookie('test',u'中文')
+    return response
 
 
 
