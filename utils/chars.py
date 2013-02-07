@@ -93,7 +93,7 @@ def string2List(ustring):
         retList.append("".join(utmp))
     return retList
 
-def is_valid_church_name(name):
+def is_valid_user_name(name):
     """ 验证教会名是否合法 
 
     只能是数字、英文、中文
@@ -145,8 +145,8 @@ if __name__=="__main__":
     #ustring=uniform(ustring)
     #ret=string2List(ustring)
     #print ret
-    a = '你妈'.decode()
+    #a = '你妈'.decode()
     #print 'len:',len(a)
-    print is_valid_church_name(a)
-    #print is_num_str('哈as1234df'.decode('utf-8'))
+    #print is_valid_church_name(a)
+    print is_num_str('as1234df'.decode('utf-8'))
     #print md5_str('asdfsadaf')

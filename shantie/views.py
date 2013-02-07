@@ -15,6 +15,10 @@ from django.core.signals import request_finished
 from django.dispatch import receiver
 import random
 import time
+import sys
+sys.path.insert(0,os.path.join(os.path.dirname(__file__),"../"))
+from utils import chars
+from copy import deepcopy
 
 #pv=0
 #@receiver(request_finished)
@@ -613,8 +617,23 @@ def register(request):
     """
     注册页面
     """
-
-    request.session['return_url']=request.META['HTTP_REFERER']
+    user_session = request.session
+    user_session['return_url']=request.META['HTTP_REFERER']
+    print 'register session last_request:',user_session.get('last_request','')
+    print 'register session username_input_error:',user_session.get('username_input_error','')
+    if user_session.get('last_request','') == 'create_user':
+        if user_session.get('username_input_error',''):
+            error_data = {'name_status':'inputError','error_name':user_session['username_input_error'],'status':'error'}
+            user_session['username_input_error'] = ''    
+            user_session['last_request'] = ''
+            print 'error_data:',error_data
+            return render('register.html',error_data)
+        elif user_session.get('password_input_error',''):
+            error_data = {'password_status':'inputError','status':'error'}
+            user_session['password_input_error'] = ''    
+            user_session['last_request'] = ''
+            print 'error_data:',error_data
+            return render('register.html',error_data)
     return render('register.html',{})
 
 
@@ -627,14 +646,32 @@ def create_new_user(request):
     username = request.POST.get('username','').strip()
     password = request.POST.get('password','').strip()
     return_url = request.session['return_url']
+    rname = deepcopy(request.POST.get('username',''))
     print 'return_url  url:',request.session['return_url']
     if username and password:
+        username_unicode  = username.decode()
+        password_unicode  = password.decode()
+        #检测用户名合法性,只能是1-8位的中文数字英文
+        print 'name res:',chars.is_valid_user_name(username_unicode),len(username_unicode)
+        print 'pwd res:',chars.is_num_str(password_unicode),len(password_unicode)
+        if chars.is_valid_user_name(username_unicode) == False or 0>=len(username_unicode) or len(username_unicode)>8:
+            username_error = True
+            request.session['username_input_error']=username
+            request.session['last_request']='create_user'
+            return  HttpResponseRedirect('/register')
+        #检测用户名合法性,只能是1-6位的数字英文
+        if chars.is_num_str(password_unicode) == False or 0>=len(password_unicode) or len(password_unicode)>6:
+            password_error = True
+            request.session['password_input_error']=1
+            request.session['last_request']='create_user'
+            return  HttpResponseRedirect('/register')
+
         uid = mdb.create_user(username,password,ip)
         print 'uid:',uid
         return_path = return_url.split('/',3)[-1]
         if uid:
             #print 'return  path:',return_path
-            if return_path.replace('/','') == 'register':
+            if return_path.replace('/','') in ('register','logout'):
                 return_url = '/'
             else:
                 return_url = '/'+return_path
@@ -643,7 +680,9 @@ def create_new_user(request):
             request.session['uid']=uid
             #print 'return url:',return_url
             response  = render_to_response('info.html', {'content':"注册成功!",'title':'注册成功','return_url':return_url}) 
-            response.set_cookie("username",username)
+            print 'cookie name:',username
+            response.set_cookie("username",repr(rname))
+            #response.set_cookie("username",smart_unicode(rname))
             return response
         else:
             pass
@@ -657,7 +696,7 @@ def login_page(request):
     """
     refer_url = request.META['HTTP_REFERER']
     return_path = refer_url.split('/',3)[-1]
-    if return_path.replace('/','') == 'userlogin':
+    if return_path.replace('/','') in ('userlogin','logout'):
         return_url = '/'
     else:
         return_url = '/'+return_path

@@ -2,7 +2,7 @@
 {% block addcss %}
 <style type="text/css">
 .form-signin {
-    width:500px;
+    width:600px;
     padding: 19px 2px 29px;
     margin: 0 auto 20px;
     background-color: #fff;
@@ -19,18 +19,21 @@
 
                 <form class="bs-dosc form-signin form-horizontal" action="/adduser/" method="post" >
 
-                <div class="control-group">
-                <label class="control-label" for="inputEmail">需要一个屌爆的名字</label>
-                <div class="controls">
-                <input type="text" id="inputEmail"  name="username" placeholder="春哥">
-                </div>
+                <div class="control-group {{status}}">
+                    <label class="control-label" for="inputEmail">需要一个屌爆的名字</label>
+                    <div class="controls">
+                        <input type="text" id="{{name_status|default:"inputEmail"}}"  name="username" placeholder="春哥" value="{{error_name}}">
+                        <span class="{{name_status|default:"help-inline"}}">1-8位的英文,数字,或中文</span>
+                    </div>
                 </div>
 
-                <div class="control-group">
-                <label class="control-label" for="inputPassword">需要一个猥琐的密码</label>
-                <div class="controls">
-                <input type="password" id="inputPassword" name="password" placeholder="98wj1d0aw9idoqjr+3%">
-                </div>
+                <div class="control-group {{status}}">
+                    <label class="control-label" for="inputPassword">需要一个猥琐的密码</label>
+
+                    <div class="controls">
+                        <input type="password" id="{{password_status|default:"inputPassword"}}" name="password" placeholder="98wj1d0aw9idoqjr+3%">
+                        <span class="{{password_status|default:"help-inline"}}">1-6位的英文或数字</span>
+                    </div>
                 </div>
 
                 <div class="control-group">
