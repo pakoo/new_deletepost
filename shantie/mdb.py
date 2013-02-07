@@ -388,7 +388,7 @@ def create_user(username,password,ip):
                             '_id':uid,
                             'name':username,
                             'password':password,
-                            'score':password,
+                            'score':10,
                             'register_time':datetime.now(),
                             'register_ip':ip,
                             'last_login_time':datetime.now(),
