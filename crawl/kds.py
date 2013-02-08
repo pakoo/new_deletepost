@@ -684,7 +684,11 @@ def get_tieba_info(tieba_name='liyi'):
 if __name__ == "__main__":
     while True:
         try:
-            #get_tieba_post("liyi")
+            get_tieba_post("liyi")
+            get_tieba_post("liyi")
+            get_tieba_post("liyi")
+            get_tieba_post("liyi")
+            get_tieba_post("liyi")
             #get_tieba_post("wow")
             #get_tieba_post("meinv")
             #get_tieba_post("jietuo")

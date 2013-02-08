@@ -1,0 +1,106 @@
+﻿{% extends "base.html" %}
+
+
+{% block title %}{{title}}{% endblock %}
+{% block description %}{{title}}{% endblock %}
+
+{% block content %}
+<div class="container">
+
+<!-- Main hero unit for a primary marketing message or call to action -->
+<div class="row">
+    <div class="span10 offset1">
+    <h1>{{title}}</h1>
+    </div>
+</div>
+<!-- Example row of columns -->
+<div class="row">
+<div class="span10 offset1">
+    <table class="table table-bordered">
+    <tbody>
+        {% for reply in data.content %}
+            <tr>
+            <td><p>第{{reply.floor}}楼</p>{{reply.user_name}}</td>
+            <td class="content">{{reply.content|safe}}</td>
+            <td>{{reply.create_time}}</td>
+            </tr>
+      
+        {% endfor %}
+        {% if data.user_reply %}
+            {% for reply in data.user_reply %}
+                <tr>
+                <td><p>第{{reply.floor}}楼</p>{{reply.user_name}}</td>
+                <td class="content">{{reply.content|safe}}</td>
+                <td>{{reply.create_time}}</td>
+                </tr>
+      
+            {% endfor %}
+        {% endif %}
+    </tbody>
+
+    </table>
+</div>
+</div>
+
+<div class="row">
+    <form class="form-horizontal"  action="/writereply" method="post">
+        <fieldset>
+        <legend>回复</legend>
+        <div class="control-group">
+            <label for="textarea" class="control-label">我想说</label>
+            <div class="controls">
+            <textarea rows="10" name="text" class="input-xxlarge"></textarea>
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <button type="btn btn-primary" type="submit">发送</button>
+        </div>
+        </fieldset>
+    </form>>
+</div>
+
+<div class="row">
+<div class="span12">
+  <div class="bs-docs-example">
+    <h3>网友们都在看下面的帖子！</h3>
+    <ul>
+        {% for tie in hot_post %}
+            <li><a href="{{tie.0}}">{{tie.1}}</li>
+        {% endfor %}
+    </ul>
+  </div>
+</div>
+</div>
+{% endblock %}
+
+
+
+{% block script %}
+    <span style="display:none">
+    <center>
+    <script language="javascript" type="text/javascript" src="http://js.users.51.la/9399637.js"></script>
+    <noscript><a href="http://www.51.la/?9399637" target="_blank"><img alt="&#x6211;&#x8981;&#x5566;&#x514D;&#x8D39;&#x7EDF;&#x8BA1;" src="http://img.users.51.la/9399637.asp" style="border:none" /></a>
+    </noscript>
+    </center>
+    </span>
+
+<script type="text/javascript">
+//破防盗链js
+function ImgRebuild() {
+	$(".content img").each(function(i){
+		url = this.src;
+		width = this.width;
+		height = this.height;
+		var imgid = Math.random();
+		frameid = 'frameimg' + imgid;
+		window['img'+imgid] = '<img id="img" src=\''+url+'?kilobug\' /><script>window.onload = function() { parent.document.getElementById(\''+frameid+'\').height = document.getElementById(\'img\').height+\'px\';img_width =document.getElementById(\'img\').width;if (img_width>=902) {document.getElementById(\'img\').width=\'902\';} }<'+'/script>';
+		img_r = '<iframe id="'+frameid+'" src="javascript:parent[\'img'+imgid+'\'];" frameBorder="0" height="' +height+ '" scrolling="no" width="100%"></iframe>';
+		$(this).replaceWith(img_r);
+	});
+	return '';
+}
+ImgRebuild();
+</script>
+{% endblock %}
+     

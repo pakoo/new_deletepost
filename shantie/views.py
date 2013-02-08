@@ -73,9 +73,9 @@ def get_html(url):
         return None
     return html
 
-def mainpage(request):
+#def mainpage(request):
     #print 'session id:',request.session['sessionid']
-    print 'cookie:',request.COOKIES
+    #print 'cookie:',request.COOKIES
     #res =  request.session.test_cookie_worked()
     #if res:
     #    print 'test cookie:',res
@@ -89,7 +89,7 @@ def mainpage(request):
     #response  = render_to_response('mainpage.html', {}) 
     #response.set_cookie("my_cookie",'cookie value')
     #return response
-    return HttpResponseRedirect('/real/1/')
+    #return HttpResponseRedirect('/real/1/')
 
 
 def xkds_mainpage(request):
@@ -116,7 +116,7 @@ def xkds(request,page):
         
     return render('kds.html',post_data)
 
-def diba(request,page):
+def diba(request,page=1):
     print 'page:',page
     agent = request.META.get('HTTP_USER_AGENT','')
     page=int(page)
@@ -147,7 +147,7 @@ def diba(request,page):
     #    return render('diba.html',post_data)
     return render('hero.html',post_data)
 
-def real(request,page):
+def real(request,page=1):
     """
     返回玩家正在看得帖子
     """
@@ -346,7 +346,7 @@ def get_tieba_post(request,post_url):
     reply_info=get_tieba_post_reply(int(post_url),'tieba',mdb.debug_flag)
     hot_post = mdb.get_hot_post('tieba')
     if reply_info:
-        return render('tieba.html',{'data':reply_info,'title':reply_info['title'],'floor':1,'hot_post':hot_post})
+        return render('content.html',{'data':reply_info,'title':reply_info['title'],'floor':1,'hot_post':hot_post})
     else:
         return HttpResponseRedirect('/real/1/')
         #return HttpResponse('post have be delete')
@@ -777,4 +777,4 @@ def info(request):
     return response
 
 
-
+mainpage = diba
