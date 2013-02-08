@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 import tornado.ioloop
 import tornado.web
+import tornado.template
 import tornado.httpserver
 import logging
 from BeautifulSoup import BeautifulSoup
@@ -170,9 +171,15 @@ class towww(tornado.web.RequestHandler):
 class tufuli(tornado.web.RequestHandler):
 
     def get(self):
-        self.finish('asdf')
+        self.finish('b97ac2b5f862000c013621616f783a78')
         #self.redirect('www.404cn.org'+slef.uri, permanent=True)
         
+class www(tornado.web.RequestHandler):
+
+    def get(self):
+        #loader = tornado.template.Loader("./tufuli/")
+        #self.finish(loader.load('base.html').generate({}))
+        self.render('tufuli/base.html',mainpage='active')
 
 class Application(tornado.web.Application):
     def __init__(self):
@@ -180,7 +187,8 @@ class Application(tornado.web.Application):
             'debug':True,
         }
         handlers = [
-            (r'/',weixin),
+            #(r'/',weixin),
+            (r'/',www),
             (r"/static/(.*)", tornado.web.StaticFileHandler, {"path": "./static"}),
         ]
         tornado.web.Application.__init__(self,handlers,**app_settings)

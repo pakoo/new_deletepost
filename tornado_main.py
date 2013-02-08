@@ -51,7 +51,7 @@ def main():
 
     tornado_app.add_handlers(r"www\.tufuli\.com", [
     (r"/root.txt", app.tufuli),
-    (r"/", app.tufuli),
+    (r"/", app.www),
     (r"/static/(.*)", tornado.web.StaticFileHandler, {"path": "./static"}),
     ])
 
