@@ -352,7 +352,7 @@ def get_tieba_post(request,post_url):
     reply_info=get_tieba_post_reply(int(post_url),'tieba',mdb.debug_flag)
     hot_post = mdb.get_hot_post('tieba')
     if reply_info:
-        return render('content.html',{'data':reply_info,'title':reply_info['title'],'floor':1,'hot_post':hot_post})
+        return render('content.html',{'data':reply_info,'title':reply_info['title'],'floor':1,'hot_post':hot_post,'tieba':True})
     else:
         return HttpResponseRedirect('/real/1/')
         #return HttpResponse('post have be delete')
