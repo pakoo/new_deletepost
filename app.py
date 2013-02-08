@@ -167,6 +167,11 @@ class towww(tornado.web.RequestHandler):
         self.finish(self.uri)
         #self.redirect('www.404cn.org'+slef.uri, permanent=True)
 
+class tufuli(tornado.web.RequestHandler):
+
+    def get(self):
+        self.finish('asdf')
+        #self.redirect('www.404cn.org'+slef.uri, permanent=True)
         
 
 class Application(tornado.web.Application):

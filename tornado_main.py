@@ -49,6 +49,12 @@ def main():
     (r"/static/(.*)", tornado.web.StaticFileHandler, {"path": "./static"}),
     ])
 
+    tornado_app.add_handlers(r"www\.tufuli\.com", [
+    (r"/root.txt", app.tufuli),
+    (r"/", app.tufuli),
+    (r"/static/(.*)", tornado.web.StaticFileHandler, {"path": "./static"}),
+    ])
+
     server = tornado.httpserver.HTTPServer(tornado_app)
     server.listen(options.port)
     tornado.ioloop.IOLoop.instance().start()
