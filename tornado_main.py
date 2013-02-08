@@ -32,6 +32,11 @@ def main():
     (r"/static/(.*)", tornado.web.StaticFileHandler, {"path": "./static"}),
     ])
 
+    tornado_app.add_handlers(r"www\.oucena\.com", [
+    (r"/", app.weixin),
+    (r"/static/(.*)", tornado.web.StaticFileHandler, {"path": "./static"}),
+    ])
+
     server = tornado.httpserver.HTTPServer(tornado_app)
     server.listen(options.port)
     tornado.ioloop.IOLoop.instance().start()
