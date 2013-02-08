@@ -95,26 +95,31 @@ def get_html(url):
 def xkds_mainpage(request):
     return HttpResponseRedirect('/kds/1/')
     
-def xkds(request,page):
+def xkds(request,page=1):
     print 'page:',page
+    user_session = request.session
+    username = user_session.get('name',None)
     page=int(page)
     frontpage='/kds/%s/'%(page-1)
     nextpage='/kds/%s/'%(page+1)
     res = get_delete_post_url(page=page)
     #print 'data:',data
     if not res:
-        return HttpResponse('no delete post')
+        return render('hero.html',{'username':username})
     else:
-        data,post_amount=res
-    post_data={'posts':data}
-    post_data['total_amount']=post_amount
+        data,total_amount=res
+    post_data={'posts':data,
+               'total_amount':total_amount,
+               #'hot_post':hot_post,
+                }
     if page >1:
         post_data['frontpage']=frontpage
     else:
         post_data['frontpage']=None
     post_data['nextpage']=nextpage
-        
-    return render('kds.html',post_data)
+    post_data['kds']='active'
+    post_data['username']=username
+    return render('hero.html',post_data)
 
 def diba(request,page=1):
     print 'page:',page
@@ -327,9 +332,10 @@ def search_post(request,keyword,page):
 
 def get_kds_post(request,post_url):
     print "post_url:",post_url
-    reply_info=get_tieba_post_reply(post_url+'.html','kds')
+    reply_info=get_tieba_post_reply(post_url+'.html','kds',mdb.debug_flag)
+    hot_post = mdb.get_hot_post('tieba')
     if reply_info:
-        return render('kds_post.html',{'data':reply_info,'title':reply_info['title'],'floor':1})
+        return render('content.html',{'data':reply_info,'title':reply_info['title'],'floor':1,'hot_post':hot_post})
     else:
         return HttpResponseRedirect('/kds/1/')
         #return HttpResponse('post have be delete')

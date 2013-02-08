@@ -205,26 +205,31 @@ def get_kds_post():
     mainurl="http://club.pchome.net/forum_1_15.html"
     html=get_html(mainurl)
     if html:
-        #soup = BeautifulSoup(html,fromEncoding='gbk')
-        soup = BeautifulSoup(html)
-        posts=soup.findAll('ul',{'class':'list_item'})
-        
+        soup = BeautifulSoup(html,fromEncoding='gbk')
+        #soup = BeautifulSoup(html)
+        posts=soup.findAll('li',{'class':'i2'})
+        #print 'post:',posts
         for p in posts:
-            p_li=p.findAll('li')
-#            print p_li[2].a['title'],
+            p_li=p.findAll('span')
+            p_a=p.findAll('a')
+            for a in  p_li:
+                print a
+            for a in  p_a:
+                print a
             post_info={
-            'url':p_li[2].a['href'][1:],
-            'title':smart_str(p_li[2].a['title']),
-            'reply':int(p_li[3].text),
-            'user_id':int(p_li[4].a['href'].split('/')[-1].split('.')[0]),
-            'user_name':p_li[4].a.text,
-            'create_time':transtime(p_li[5].text),
+            'url':p_li[1].a['href'][1:],
+            'title':smart_str(p_li[1].a['title']),
+            'reply':int(p_li[0].text),
+            'user_id':int(p_a[-1]['bm_user_id']),
+            'user_name':p_a[-1].text,
+            'create_time':transtime(p_li[3].text),
             'find_time':time.time(),
             'is_open':1,
             'content':'',
             'is_check':0,
             'click':0,
             }
+            print post_info
             post_url=str(os.path.join(root,post_info['url']))
             print 'post_url:',post_url
             post_html=get_html(post_url)
@@ -240,7 +245,7 @@ def get_kds_post():
                 post_soup = BeautifulSoup(post_html,fromEncoding='gbk')
                 post_info['content'] = get_kds_post_reply(post_soup) 
                 post_info['find_time'] =post_info['create_time']
-            #print 'post_info:',post_info
+            print 'post_info:',post_info
             post_insert(post_info,'kds')
 
     else:
@@ -255,7 +260,7 @@ def get_kds_post_reply(post_soup):
     #post_soup = BeautifulSoup(post_html,fromEncoding='gbk')
     layer = 0
     reply_data = []
-    reply_list =post_soup.find('div',{'id':'weibo_app'}) 
+    reply_list =post_soup.find('div',{'id':'detail-content'}) 
     for reply in reply_list:
         if type(reply) == type(reply_list):
             #print '>'*90
@@ -682,22 +687,22 @@ def get_tieba_info(tieba_name='liyi'):
 
 
 if __name__ == "__main__":
-    while True:
-        try:
-            get_tieba_post("liyi")
-            get_tieba_post("liyi")
-            get_tieba_post("liyi")
-            get_tieba_post("liyi")
-            get_tieba_post("liyi")
-            #get_tieba_post("wow")
-            #get_tieba_post("meinv")
-            #get_tieba_post("jietuo")
-            #get_kds_post()
-            get_tieba_post_img("jietup")
-        except Exception,e:
-            print('\n'*9)
-            traceback.print_exc()
-            print('\n'*9)
+    #while True:
+    #    try:
+    #        #get_tieba_post("liyi")
+    #        #get_tieba_post("liyi")
+    #        #get_tieba_post("liyi")
+    #        #get_tieba_post("liyi")
+    #        #get_tieba_post("liyi")
+    #        #get_tieba_post("wow")
+    #        #get_tieba_post("meinv")
+    #        #get_tieba_post("jietuo")
+    #        get_kds_post()
+    #        #get_tieba_post_img("jietup")
+    #    except Exception,e:
+    #        print('\n'*9)
+    #        traceback.print_exc()
+    #        print('\n'*9)
 #print get_kds_post_reply('http://club.pchome.net/thread_1_15_7030170.html') #main()
 #    print save_post('thread_1_15_6751208__.html','test1',kds)
 #    print transtime('11-11-13 12:30')
@@ -713,3 +718,4 @@ if __name__ == "__main__":
     
     #print reply_img_insert(db_name = 'tieba',sort_name='liyi',img_url='http://imgsrc.baidu.com/forum/pic/item/0b46f21fbe096b6375fba8f70c338744eaf8acb3.jpg')
     #get_tieba_info()
+    get_kds_post()
