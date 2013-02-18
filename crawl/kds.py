@@ -131,7 +131,7 @@ def post_insert(para,dbname=None):
     print 'is_open:',para['is_open']
     url=para['url']
     res=db.post.find_one({'url':url})
-    save_user(para['user_id'],para['user_name'],dbname=dbname)
+    #save_user(para['user_id'],para['user_name'],dbname=dbname)
     #ban_user_check = db_ban_user.find_one({'user_name':para['user_name']})
     #print 'ban_user_check:',ban_user_check
     #if ban_user_check is not None:
