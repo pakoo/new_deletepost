@@ -37,9 +37,9 @@ def is_login(func) :
     """
     def check(request,*args,**kargs):
         user_session =request.session 
-        print 'user_session is_login:',user_session.get('is_login',0)
+        print 'user_session is_admin:',user_session.get('is_admin',0)
         #if user_session.get('sessionid',0):
-        if user_session.get('is_login',0) != 1: 
+        if user_session.get('is_admin',0) != 1: 
             return HttpResponseRedirect('/admin')
         else:
             return func(request,*args,**kargs) 
@@ -123,9 +123,11 @@ def diba(request,page):
     frontpage='/tieba/%s/'%(page-1)
     nextpage='/tieba/%s/'%(page+1)
     res = get_tieba_delete_post_url(page=page)
+    user_session = request.session
+    username = user_session.get('name',None)
     #print 'data:',data
     if not res:
-        return render('hero.html',{})
+        return render('hero.html',{'username':username})
     else:
         data,hot_post,total_amount=res
     post_data={'posts':data,
@@ -138,6 +140,7 @@ def diba(request,page):
         post_data['frontpage']=None
     post_data['nextpage']=nextpage
     post_data['liyi']='active'
+    post_data['username']=username
     #print 'HTTP_USER_AGENT:',request.META.get('HTTP_USER_AGENT',{})
     #if 'IE' in agent:
     #    print "发现傻逼IE!!!!!!!!!!!!!"
@@ -149,6 +152,9 @@ def real(request,page):
     返回玩家正在看得帖子
     """
     print 'page:',page
+    user_session = request.session
+    username = user_session.get('name',None)
+    print 'username:',username
     agent = request.META.get('HTTP_USER_AGENT','')
     page=int(page)
     frontpage='/real/%s/'%(page-1)
@@ -156,7 +162,7 @@ def real(request,page):
     res = mdb.get_tieba_today_hot_post_url(page=page)
     #print 'data:',data
     if not res:
-        return render('hero.html',{})
+        return render('hero.html',{'username':username})
     else:
         data,hot_post,total_amount=res
     post_data={'posts':data,
@@ -169,6 +175,7 @@ def real(request,page):
         post_data['frontpage']=None
     post_data['nextpage']=nextpage
     post_data['real']='active'
+    post_data['username']=username
     return render('hero.html',post_data)
 
 
@@ -177,9 +184,9 @@ def filter_post_list(request,page):
     返回被和谐的帖子列表
     """
     user_session =request.session 
-    print 'user_session is_login:',user_session.get('is_login',0)
+    print 'user_session is_admin:',user_session.get('is_admin',0)
     #if user_session.get('sessionid',0):
-    if user_session.get('is_login',0) != 1: 
+    if user_session.get('is_admin',0) != 1: 
         return HttpResponseRedirect('/admin')
     print 'page:',page
     agent = request.META.get('HTTP_USER_AGENT','')
@@ -225,22 +232,18 @@ def kds_backend(request,page):
     post_data['nextpage']=nextpage
         
     return render('kds_backend.html',post_data)
-    
+@is_login 
 def tieba_backend(request,page):
     #print 'session id:',request.session['sessionid']
     print 'page:',page
     user_session =request.session 
-    print 'user_session is_login:',user_session.get('is_login',0)
-    #if user_session.get('sessionid',0):
-    if user_session.get('is_login',0) != 1: 
-        return HttpResponseRedirect('/admin')
     page=int(page)
     frontpage='/tieba/manage/%s/'%(page-1)
     nextpage='/tieba/manage/%s/'%(page+1)
     res = get_tieba_delete_post_url(page=page)
     #print 'data:',data
     if not res:
-        return HttpResponse('no delete post')
+        return render('manage.html',{})
     else:
         data,hot_post,post_amount=res
     post_data={'posts':data}
@@ -254,15 +257,11 @@ def tieba_backend(request,page):
         
     return render('manage.html',post_data)
 
-
+@is_login
 def tieba_today_hot(request,page):
     #print 'session id:',request.session['sessionid']
     print 'page:',page
     user_session =request.session 
-    print 'user_session is_login:',user_session.get('is_login',0)
-    #if user_session.get('sessionid',0):
-    if user_session.get('is_login',0) != 1: 
-        return HttpResponseRedirect('/admin')
     page=int(page)
     frontpage='/tieba/hot/%s/'%(page-1)
     nextpage='/tieba/hot/%s/'%(page+1)
@@ -367,14 +366,12 @@ def get_filter_post(request,post_url):
         #return HttpResponse('post have be delete')
 
 @csrf_exempt    
+@is_login
 def remove_tieba_post(request):
     """
     删除帖子
     """
     user_session =request.session 
-    print 'user_session is_login:',user_session.get('is_login',0)
-    if user_session.get('is_login',0) != 1: 
-        return HttpResponse('不要做坏事哦!')
     post_url = request.POST['url']
     print 'post_url:',post_url
     if post_url:
@@ -385,11 +382,9 @@ def remove_tieba_post(request):
     return HttpResponse(res)
 
 @csrf_exempt    
+@is_login
 def remove_kds_post(request):
     user_session =request.session 
-    print 'user_session is_login:',user_session.get('is_login',0)
-    if user_session.get('is_login',0) != 1: 
-        return HttpResponse('不要做坏事哦!')
     post_url = request.POST['url']
     print 'post_url1:',post_url
     if post_url:
@@ -448,18 +443,21 @@ def advice_board(request):
     """
     留言版
     """
-    return render('advice.html',{'advice':'active'})
-
+    user_session = request.session
+    username = user_session.get('name',None)
+    return render('advice.html',{'advice':'active','username':username})
 
 def manage_login(request):
     """
     后台登录页
     """
     user_session =request.session 
-    print 'user_session is_login:',user_session.get('is_login',0)
-    if user_session.get('is_login',0) == 1:
-            return HttpResponseRedirect('/tieba/manage/1/')
-    return render('admin.html',{})
+    if user_session.get('is_admin',0) == 1:
+        return HttpResponseRedirect('/tieba/manuallynage/1/')
+    else:
+        return render('admin.html',{})
+        
+
 
 @csrf_exempt    
 def admin_login(request):
@@ -468,14 +466,14 @@ def admin_login(request):
     """
     print 'POST:',request.POST
     user_session =request.session 
-    print 'user_session is_login:',user_session.get('is_login',0)
+    print 'user_session is_admin:',user_session.get('is_admin',0)
     user_name = request.POST.get('username','')
     password = request.POST.get('password','')
     if len(user_name) > 10 or len(password) >20:
         return HttpResponse('用户名密码错误')
     else:
         if mdb.user_login(user_name,password) == 1:
-            user_session['is_login'] = 1
+            user_session['is_admin'] = 1
             return HttpResponseRedirect('/tieba/manage/1/')
         else:
             return HttpResponse('用户名密码错误')
@@ -485,8 +483,8 @@ def admin_logout(request):
     管理员登出
     """
     user_session =request.session 
-    print 'user_session is_login:',user_session.get('is_login',0)
-    user_session['is_login'] = 0
+    print 'user_session is_admin:',user_session.get('is_admin',0)
+    user_session['is_admin'] = 0
     return HttpResponse('退出成功!')
 
 
@@ -498,13 +496,17 @@ def send_advice(request):
     ip = request.META['REMOTE_ADDR']
     print 'ip:',ip
     print 'POST:',request.POST
-    nick_name = request.POST.get('nickname','') 
+    user_session = request.session
+    username = user_session.get('name',None)
+    if not username :
+        username = request.POST.get('nickname','') 
     content = request.POST.get('advice','') 
-    if len(nick_name) > 20 or len(content) >140:
+    if len(username) > 20 or len(content) >140:
         return HttpResponse('留言字数过多,最多140字!')
     else:
-        mdb.add_advice(content,nick_name,ip)
-    return HttpResponse('给站长留言成功!')
+        mdb.add_advice(content,username,ip)
+    response  = render_to_response('info.html', {'content':"给站长留言成功!",'title':'留言成功','return_url':'/'}) 
+    return response
 @is_login
 def advice_message(request):
     """
@@ -534,12 +536,14 @@ def tu(request,page=1):
     """
     #pic_url = '71cf3bc79f3df8dc7fa3ae06cd11728b4610288e.jpg.jpg'
     #return render('tu.html',{'src':'http://imgsrc.baidu.com/forum/pic/item/'+pic_url})
+    user_session = request.session
+    username = user_session.get('name',None)
     page = int(page)
     img_list = []
     img_list = mdb.get_tu(page,'jietup',24)
     #img_list = [{'post_url':a['post_url'],'url':a['url']} for a in img_list]
     print img_list
-    return render('tu.html',{'img_list':img_list,'tu':'active','frontpage':page-1,'nextpage':page+1})
+    return render('tu.html',{'img_list':img_list,'tu':'active','frontpage':page-1,'nextpage':page+1,'username':username})
 
 @csrf_exempt    
 def write_reply(request):
@@ -548,6 +552,9 @@ def write_reply(request):
     """
     url = request.META['HTTP_REFERER'].split('/')[-1]
     user_session =request.session 
+    username = user_session.get('name',None)
+    if not username:
+        username = '404网友'
     print 'user_session is_login:',user_session.get('is_login',0)
     print 'user_sessionid:',user_session.get('sessionid',0)
     print 'url :',url
@@ -567,7 +574,7 @@ def write_reply(request):
                 'content':text,
                 'user_id':-1,
                 'create_time':int(time.time()),
-                'user_name':'404网友',
+                'user_name':username,
                 'session_key':getattr(user_session,'session_key',''),
             } 
             mdb.add_new_reply(int(url),reply_info)
@@ -698,7 +705,7 @@ def create_new_user(request):
             response  = render_to_response('info.html', {'content':"注册成功!",'title':'注册成功','return_url':return_url}) 
             print 'cookie name:',username
             #response.set_cookie("username",repr(rname))
-            response.set_cookie("username",smart_unicode(username),4000)
+            #response.set_cookie("username",username)
             return response
         else:
             request.session['error_reason']='用户名已存在'
@@ -732,9 +739,10 @@ def user_logout(request):
     用户登出
     """
     request.session['is_login']=0
+    request.session['name']=''
     #response  = render_to_response('info.html', {'content':"退出登录成功!",'title':'登出','return_url':'/'}) 
     response = real(request,1)
-    response.set_cookie("username",'')
+    #response.set_cookie("username",'')
     return response
 
 @csrf_exempt    
@@ -763,8 +771,9 @@ def info(request):
     提示页面
     """
     user_session = request.session
-    response = render_to_response('info.html',{'content':"这是一个神奇的敌方!"})
-    response.set_cookie('test',u'中文')
+    username = user_session.get('name',None)
+    user_session = request.session
+    response = render_to_response('info.html',{'content':"这是一个神奇的敌方!",'username':username})
     return response
 
 

@@ -260,7 +260,7 @@ def search_post(keyword='',page=1,tieba_name='liyi'):
                 item_num+=1
             return result,hot_post,tieba.post.count()
 
-def create_user(name,password,ip='',email=''):
+def create_admin(name,password,ip='',email=''):
     """
     创建用户
     """
@@ -419,8 +419,8 @@ if __name__ == "__main__":
     #print delete_post(1584957558,db=tieba)
     #print get_tieba_post_reply(1599791533,'tieba')
     #print get_hot_post('tieba')
-    #print create_user('oucena','zxzxzx','')
-    #print user_login('gan','123456')
+    print create_admin('test','asasas','')
+    #print user_login('oucena','zxzxzx')
     #add_advice('test','admin')
     #print get_advice()
     #get_tu()

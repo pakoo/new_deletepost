@@ -53,9 +53,21 @@
                 </ul>
 
                 <ul class="nav pull-right">
+                {% if not username %}
                 <li id="loginli"><a href="/userlogin" id="logina">登陆</a></li>
                 <li class="divider-vertical"></li>
                 <li id="registerli" class="dropdown"><a href="/register" id="registera">注册</a></li>
+
+                {% else %}
+                <li id="loginli"><a href="#">帐号名:</a></li>
+                <li id="registerli" class="dropdown">
+                <a href='#' class='dropdown-toggle' data-toggle='dropdown'>{{ username }}<b class='caret'></b></a>
+                <ul class='dropdown-menu'>
+                    <li><a href='/tu/1/'>去看看福利图</a></li>
+                    <li class='divider'></li>
+                    <li><a href='/logout'>登出</a></li>
+                </li>
+                {% endif%}
                 </ul>
 
                 </div><!--/.nav-collapse -->
@@ -105,23 +117,23 @@
     String.prototype.replaceAll  = function(s1,s2){
         return this.replace(new RegExp(s1,"gm"),s2);
     }
-    $(document).ready(function(){
-    var username = $.cookie('username');
+    //$(document).ready(function(){
+    //var username = $.cookie('username');
     //var rname = username.slice(2,-1);
     //var rname = username.replace('\\\\','\\');
     //var rname = username.slice(2,-1).replace('\\\\','\\');
     //alert(eval(username));
-    var menu = "<a href='#' class='dropdown-toggle' data-toggle='dropdown'>"+username+"<b class='caret'></b></a><ul class='dropdown-menu'><li><a href='/tu/1/'>去看看福利图</a></li><li class='divider'></li><li><a href='/logout'>登出</a></li>"
+    //var menu = "<a href='#' class='dropdown-toggle' data-toggle='dropdown'>"+username+"<b class='caret'></b></a><ul class='dropdown-menu'><li><a href='/tu/1/'>去看看福利图</a></li><li class='divider'></li><li><a href='/logout'>登出</a></li>"
     //var menu = "<a href='#' class='dropdown-toggle' data-toggle='dropdown'>"+rname+"<b class='caret'></b></a><ul class='dropdown-menu'><li><a href='/tu/1/'>去看看福利图</a></li><li class='divider'></li><li><a href='/logout'>登出</a></li>"
-    if (username.length)
-        {
-        $("#loginli").html('<a href="#">帐号名:</a>')
-        $("#registerli").html(menu)
-        }
+    //if (username.length)
+    //    {
+    //    $("#loginli").html('<a href="#">帐号名:</a>')
+    //    $("#registerli").html(menu)
+    //    }
     //else
     //    alert("not fount username");
         
-    });
+    //});
     </script>
 </html>
 

@@ -14,7 +14,11 @@
             <div class="control-group">
                 <label for="input01" class="control-label">留言者昵称</label>
                 <div class="controls">
+                    {% if username %}
+                    <input type="text" name="nickname" class="input-xlarge" value="{{username}}" disabled>
+                    {% else %}
                     <input type="text" name="nickname" class="input-xlarge" placeholder="屌丝欢">
+                    {% endif %}
                     <p class="help-block">
                         给自己取个名字
                     </p>
