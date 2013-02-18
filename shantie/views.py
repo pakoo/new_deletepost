@@ -453,7 +453,7 @@ def manage_login(request):
     """
     user_session =request.session 
     if user_session.get('is_admin',0) == 1:
-        return HttpResponseRedirect('/tieba/manuallynage/1/')
+        return HttpResponseRedirect('/tieba/manage/1/')
     else:
         return render('admin.html',{})
         
