@@ -1,0 +1,12 @@
+#coding:utf-8
+indexes=['prestige_min','prestige_max']
+config_name=['level','church','influence','prestige_min','prestige_max']
+config_list=[
+    [1,'修士','平民',0,1.66],
+    [2,'教父','男爵',1.66,3.32],
+    [3,'主教','子爵',3.32,4.98],
+    [4,'大主教','伯爵',4.95,6.64],
+    [5,'宗主教','侯爵',6.64,8.30],
+    [6,'红衣主教','公爵',8.30,9.96],
+    [7,'教皇','君主',9.96,10.0],
+]

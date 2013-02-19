@@ -1,0 +1,14 @@
+from __init__ import talents
+from collections import defaultdict
+
+talent_index = {'level':defaultdict(set),'quest':defaultdict(set),'instance':defaultdict(set)}
+
+for talent in talents.find():
+    try:
+        conds = eval(talent.condition)
+        for cond in conds:
+            if cond['type'] == 'logic':
+                continue
+            talent_index[ cond['type'] ][ cond['param'] ].add(talent)
+    except:
+        pass

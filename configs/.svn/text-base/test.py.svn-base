@@ -1,0 +1,7 @@
+indexes = ['age']
+config_name=['id','name','age']
+config_list=[
+    (1,'qubug',22),
+    (2,'ob',22),
+    (3,'huanhuan',21),
+]

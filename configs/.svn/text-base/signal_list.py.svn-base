@@ -1,0 +1,26 @@
+#coding:utf-8
+
+#all signal workname 
+
+
+#quest finished
+quest_finished = 'quest.finished'
+
+#instance finished
+instance_finished = 'instance.finished'
+
+#leveled up
+avatar_level_up = 'avatar.levelup'
+
+
+#购买某个英雄
+buy_hero = 'buy.hero'
+
+#购买某个装备
+buy_item = 'buy.item'
+
+#升级装备
+level_up_item = 'level_up.item'
+
+#获得英雄技能
+hero_skill = 'hero_skill'

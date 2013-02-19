@@ -1,0 +1,7 @@
+#coding:utf-8
+indexes = ['cloud_id']
+config_name = ['cloud_id', 'positions', 'chains', 'awards']
+config_list = [
+    [1, '1,2,3,4,5', '1,2', 106],
+    [2, '6,7', '', ''],
+]

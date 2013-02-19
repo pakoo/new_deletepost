@@ -1,0 +1,10 @@
+#coding:utf-8
+indexes = []
+config_name = ['title', 'bottom_prestige', 'top_prestige', 'church_skill_effect']
+config_list = [
+    ['\xe5\x85\xa5\xe9\x97\xa8', 0, 999, 0.01],
+    ['\xe4\xbf\xa1\xe5\xbe\x92', 1000, 4952, 0.02],
+    ['\xe7\xa4\xbc\xe6\x8b\x9c', 4953, 24531, 0.03],
+    ['\xe8\x99\x94\xe8\xaf\x9a', 24532, 121509, 0.04],
+    ['\xe7\x8b\x82\xe7\x83\xad', 121510, -1, 0.05],
+]

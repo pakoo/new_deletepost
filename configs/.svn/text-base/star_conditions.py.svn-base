@@ -1,0 +1,12 @@
+#coding:utf-8
+indexes = ['condition_id']
+config_name = ['condition_id', 'hero', 'item']
+config_list = [
+    [1, 72, ''],
+    [2, 572, ''],
+    [3, 82, ''],
+    [4, '', 3410],
+    [5, '', 4801],
+    [6, 427, ''],
+    [7, 427, ''],
+]

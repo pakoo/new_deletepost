@@ -1,0 +1,303 @@
+#coding:utf-8
+'''Common Configs (a list/dict can handle)
+'''
+import os
+MySQLdb = None
+
+
+class LaobiError(Exception):
+    """  配置表异常类（命名灵感来自于万恶的老毕!）"""
+    pass
+
+
+
+# key
+secretkey = 'abcd1234;lkjpoiu2345'
+
+#database
+env = os.environ.get('env','DEV')
+#env = os.environ.get('env','production')
+#env = os.environ.get('env','TEST2')
+if env == 'DEV':
+    dbpara={
+        'creator':MySQLdb,
+        'host':'192.168.8.26',
+        'user':'root',
+        'password':'123456',
+        #'database':'HoopWorld44',
+        'database':'star',
+        'port':3306,
+        'cachehost':'192.168.8.26', 'cacheport':6379,'cachedb':2,
+        'pool_size':3,
+        }
+    cache_para={
+           'host':'192.168.8.26',
+           'port':6379,
+           'db':2,
+    }
+    mongo_para={
+        'host':'192.168.8.26',
+        'port':27017,
+    }
+    pay_dbpara={
+        'creator':MySQLdb,
+        'host':'192.168.18.217',
+        'user':'root',
+        'password':'123456',
+        'database':'hoopworld_pay',
+        'port':3306,
+        # 占位，没有实际用到
+        'cachehost':'192.168.8.26', 'cacheport':6379,
+        'pool_size':3,
+    }
+    redis_url = 'redis://192.168.8.26:6379/11'
+elif env == 'TEST':
+    dbpara={
+        'creator':MySQLdb,
+        'host':'192.168.8.126',
+        'user':'root',
+        'password':'123456',
+        'database':'HoopWorld',
+        'port':3306,
+        'cachehost':'192.168.8.126', 'cacheport':6379,
+        'pool_size':30,
+        }
+    cache_para={
+           'host':'192.168.8.126',
+           'port':6379,
+           'db':0,
+    }
+    mongo_para={
+        'host':'192.168.8.26',
+        'port':27017,
+    }
+    redis_url = 'redis://192.168.8.126:6379/11'
+elif env == 'DEMO':
+    dbpara={
+        'creator':MySQLdb,
+        'host':'192.168.8.226',
+        'user':'root',
+        'password':'123456',
+        'database':'HoopWorld',
+        'port':3306,
+        'cachehost':'192.168.8.226', 'cacheport':6379,
+        'pool_size':30,
+        }
+    cache_para={
+           'host':'192.168.8.226',
+           'port':6379,
+           'db':0,
+    }
+    mongo_para={
+        'host':'192.168.8.26',
+        'port':27017,
+    }
+    redis_url = 'redis://192.168.8.226:6379/11'
+elif env == 'production':
+    dbpara={
+        'creator':MySQLdb,
+        'host':'192.168.0.50',
+        'user':'hoop',
+        'password':'A#5Ae0fW163a7E6a@15Ad52G168@3306',
+        'database':'HoopWorld',
+        'port':3306,
+        'cachehost':'192.168.0.53', 'cacheport':6379,
+        'pool_size':3,
+        }
+    cache_para={
+           'host':'192.168.0.53',
+           'port':6379,
+           'db':0,
+    }
+    # 跳板机
+    mongo_para={
+        'host':'192.168.0.254',
+        'port':28000,
+    }
+    # FIXME 修改为正确的配置，由邦哥提供数据
+    pay_dbpara={
+        'creator':MySQLdb,
+        'host':'192.168.18.217',
+        'user':'root',
+        'password':'123456',
+        'database':'hoopworld_pay',
+        'port':3306,
+        # 占位，没有实际用到
+        'cachehost':'192.168.8.26', 'cacheport':6379,
+        'pool_size':3,
+    }
+    redis_url = 'redis://192.168.0.53:6379/11'
+elif env == 'zpc':
+    dbpara={
+        'creator':MySQLdb,
+        'host':'192.168.8.26',
+        'user':'root',
+        'password':'123456',
+        'database':'HoopWorld',
+        'port':3306,
+        'cachehost':'localhost', 'cacheport':6379,
+        'pool_size':30,
+        }
+    cache_para={
+           'host':'localhost',
+           'port':6379,
+           'db':0,
+    }
+    mongo_para={
+        'host':'192.168.8.26',
+        'port':27017,
+    }
+    redis_url = 'redis://192.168.11.226:6379/11'
+
+if env == 'TEST2':
+    dbpara={
+        'creator':MySQLdb,
+        'host':'192.168.8.232',
+        'user':'root',
+        'password':'123456',
+        'database':'HoopWorld',
+        'port':3306,
+        'cachehost':'192.168.8.232', 'cacheport':6379,
+        'pool_size':3,
+        }
+    cache_para={
+           'host':'192.168.8.232',
+           'port':6379,
+           'db':0,
+    }
+    mongo_para={
+        'host':'192.168.8.26',
+        'port':27017,
+    }
+    redis_url = 'redis://192.168.8.232:6379/11'
+
+
+#Avatars
+avatar_init={
+             'golden_coin':0,
+             'silver_coin':0,
+             'level':1,
+             'exp':0,
+             'power':2,
+             'energy':200,
+             }
+
+package_items_init = [
+                #item_id:item_num  
+                (1,1),
+                (3,1),
+                (4,1),
+                (5,1),
+                (6,1),
+                (7,1),
+                (8,1),
+                (9,1),
+                (2,1),
+              ]
+
+#Heroes
+        
+bar_normal_formula = {
+    (1, 0):  (1.0, 0),
+    (2, 0):  (0.9, 0.1),
+    (2, 1):  (0, 1.0),
+}
+max_hero_level = 100
+hero_init_positions = ['Amulet','Ring','Armor','Boots']
+hero_properties = ['health','defend','evade','attack','speed','hit','crit','double']
+hero_classes = ['refresh_or','refresh_ad','refresh_el']
+update_one_pub_hero_price = 100
+hero_position = ['PG','SG','SF','PF','C']
+hero_refresh_price = 100
+hero_refresh_interval = 60
+target_position = {
+    'PG' : ['PG','SG','SF','PF','C'],
+    'SG' : ['SG','PG','SF','PF','C'],
+    'SF' : ['SF','PF','C','SG','PG'],
+    'PF' : ['PF','C','SF','SG','PG'],
+    'C'  : ['C','PF','SF','SG','PG'],
+}
+
+#Chatting
+public_channel_name = 'world_world'
+
+#Friends
+#max_num_of_friends = 100
+max_num_of_friends = 20
+
+#Items
+item_max_stacksize = {'DRUG':99,'OTHERS':99,'PACK':99,'MATERIALS':99}
+item_orderby = {'EQUIPMENT':10,'MATERIALS':15,'DRUG':20,'QUEST':30,'PACK':40,'OTHERS':50}
+golden_as_silver = 10
+equipment_type_id = 1
+
+#Churchs
+church_donate_ratio = avatar_church_donate_ratio = {'golden_coin':10,'silver_coin':1}
+church_members_pagesize = 10
+church_rank_pagesize = 15
+church_avatar_level_threshold = [0,1000,2000,4000,8000,16000,32000]
+church_level_threshold = [0,1000,2000]
+avatar_church_quit_penalty = 10
+church_quit_penalty = 0
+max_church_points = 1771957
+
+#Influences
+influence_donate_ratio = avatar_influence_donate_ratio = {'golden_coin':10,'silver_coin':1}
+influence_members_pagesize = 10
+influence_rank_pagesize = 15
+influence_avatar_level_threshold = [0,1000,2000,4000,8000,16000,32000]
+influence_level_threshold = [0,1000,2000]
+avatar_influence_quit_penalty = 10
+influence_quit_penalty = 0
+max_influence_points = 1771957
+
+
+#初始化英雄位置对应的英雄id
+hero_init_dict={
+                   'PF':{'hero_id':121,'is_using':1,'is_master':1},
+                   'PG':{'hero_id':118,'is_using':1,'is_master':1},
+                   'SG':{'hero_id':119,'is_using':1,'is_master':1},
+                   'SF':{'hero_id':120,'is_using':1,'is_master':1},
+                   'C':{'hero_id':122,'is_using':1,'is_master':1},
+                   }
+
+#天梯赛
+#青铜
+bronze = {'win':1,'lose':0,'score':0,'honour':10}
+#白银
+silver = {'win':3,'lose':-1,'score':10,'honour':15}
+#黄金
+golden = {'win':6,'lose':-2,'score':50,'honour':20}
+#钻石
+diamond = {'win':9,'lose':-3,'score':120,'honour':25}
+
+league_level = {
+'bronze':bronze,
+'silver':silver,
+'golden':golden,
+'diamond':diamond,
+}
+
+#商店相关的配置变量
+#神秘商店的刷新时间间隔
+flush_interval_time = 60*60*24
+self_influence_sell_amount = 10
+
+#设置游戏是否需要防沉迷
+game_addiction = False
+####
+#设置游戏需要校验，防止恶心情况
+check_sign = False
+
+#设置进程个数
+process_number = 2
+
+#主程序端口和代理端口设置
+mainserver_port = 8888
+policyserver_port = 8000
+
+#暂时为了测试服务器！使用默认的表结构，则设置为True,这样就使用了Slots,和对应的表
+#*****************测试库一定要设置为True
+is_default_table = False
+########################################
+irc_port = 51888

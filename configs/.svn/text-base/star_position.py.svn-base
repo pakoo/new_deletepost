@@ -1,0 +1,12 @@
+#coding:utf-8
+indexes = ['position_id']
+config_name = ['position_id', 'position_name', 'conditions', 'awards']
+config_list = [
+    [1, '\xe5\x90\x89\xe8\xaf\xba\xe6\xaf\x94\xe5\x88\xa9', 1, 101],
+    [2, '\xe9\x82\x93\xe8\x82\xaf', 2, 102],
+    [3, '\xe5\xb8\x95\xe5\x85\x8b', 3, 103],
+    [4, '\xe6\xae\x8b\xe7\xbc\xba\xe4\xb9\x8b\xe5\xb9\xb499', 4, 104],
+    [5, 'Air Jordan 13', 5, 105],
+    [6, '\xe7\xa7\x91\xe6\xaf\x94', 6, 109],
+    [7, '\xe5\xa5\xa5\xe5\xb0\xbc\xe5\xb0\x94', 7, 110],
+]

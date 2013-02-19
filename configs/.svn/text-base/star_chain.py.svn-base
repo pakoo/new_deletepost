@@ -1,0 +1,7 @@
+#coding:utf-8
+indexes = ['chain_id']
+config_name = ['chain_id', 'position_1', 'position_2', 'require_item', 'awards']
+config_list = [
+    [1, 2, 4, 4969, 107],
+    [2, 3, 5, 4969, 108],
+]

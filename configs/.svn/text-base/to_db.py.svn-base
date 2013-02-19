@@ -1,0 +1,23 @@
+#!/usr/bin/env python
+# -*- coding:utf-8 -*-
+""" 把教会和势力信息从excel表导入到数据库 """
+import os, sys
+sys.path.insert(0,os.path.join(os.path.dirname(__file__),".."))
+
+from configs import churchs, influences
+from configs.common import dbpara
+import gmysql
+
+gmysql.init(dbpara)
+
+for ch in churchs.find():
+    inf = influences.get(pk=ch.belongCity)
+    if gmysql.query_one('select * from Influences where id=%s'%ch.belongCity):
+        gmysql.update('UPDATE Influences set name=%s where id=%s',(inf.cityName,ch.belongCity))
+    else:
+        gmysql.update('INSERT INTO Influences (id,name,points) VALUES (%s,%s,%s)',(ch.belongCity,inf.cityName,0))
+
+    if gmysql.query_one('select * from Churchs where id=%s'%ch.church_id):
+        gmysql.update('UPDATE Churchs SET name=%s, god_id=%s WHERE id=%s',(ch.church_name,ch.church_godId,ch.church_id))
+    else:
+        gmysql.update('INSERT INTO Churchs (id,name,god_id,influence_id) VALUES (%s,%s,%s,%s)',(ch.church_id,ch.church_name,ch.church_godId,ch.belongCity))
