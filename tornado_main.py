@@ -39,11 +39,6 @@ def main():
         ('.*', tornado.web.FallbackHandler, dict(fallback=wsgi_app)),
         ])
 
-    tornado_app.add_handlers(r"404cn\.org", [
-    (r".*", app.towww),
-    (r"/static/(.*)", tornado.web.StaticFileHandler, {"path": "./static"}),
-    ])
-
     tornado_app.add_handlers(r"oucena\.com", [
     (r"/", app.weixin),
     (r"/static/(.*)", tornado.web.StaticFileHandler, {"path": "./static"}),
