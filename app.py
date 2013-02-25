@@ -66,7 +66,7 @@ def get_level(data):
     else:
         return "空气状况:严重污染,建议不外出"
 
-class  weixin(tornado.web.RequestHandler):
+class weixin(tornado.web.RequestHandler):
 
     def prepare(self):
         print '\n\n>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>'
@@ -159,6 +159,16 @@ class  weixin(tornado.web.RequestHandler):
         self.finish(res)
         
             
+class towwww(tornado.web.RequestHandler):
+
+    def get(self):
+        uri = self.uri     
+        print 'uri:',self.uri
+        self.finish(self.uri)
+        #self.redirect('www.404cn.org'+slef.uri, permanent=True)
+
+        
+
 class Application(tornado.web.Application):
     def __init__(self):
         app_settings={
