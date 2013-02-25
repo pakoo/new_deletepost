@@ -159,7 +159,7 @@ class weixin(tornado.web.RequestHandler):
         self.finish(res)
         
             
-class towwww(tornado.web.RequestHandler):
+class towww(tornado.web.RequestHandler):
 
     def get(self):
         uri = self.uri     

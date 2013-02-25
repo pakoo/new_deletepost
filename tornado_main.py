@@ -24,14 +24,24 @@ def main():
     wsgi_app = tornado.wsgi.WSGIContainer(
     django.core.handlers.wsgi.WSGIHandler())
 
-    tornado_app = tornado.web.Application(default_host='404cn\.org',
-      handlers=[
-        ('.*',app.towww,
-        (r"/static/(.*)", tornado.web.StaticFileHandler, {"path": "./static"}),
-        )])
+    #tornado_app = tornado.web.Application(default_host='404cn\.org',
+    #  handlers=[
+    #    ('.*',app.towww),
+    #    (r"/static/(.*)", tornado.web.StaticFileHandler, {"path": "./static"}),
+    #    )])
 
-    tornado_app.add_handlers(r"wwww\.404cn\.org", [
-    ('.*', tornado.web.FallbackHandler, dict(fallback=wsgi_app)),
+    #tornado_app.add_handlers(r"wwww\.404cn\.org", [
+    #('.*', tornado.web.FallbackHandler, dict(fallback=wsgi_app)),
+    #])
+
+    tornado_app = tornado.web.Application(default_host='www\.404cn\.org',
+      handlers=[
+        ('.*', tornado.web.FallbackHandler, dict(fallback=wsgi_app)),
+        ])
+
+    tornado_app.add_handlers(r"404cn\.org", [
+    (r".*", app.towww),
+    (r"/static/(.*)", tornado.web.StaticFileHandler, {"path": "./static"}),
     ])
 
     tornado_app.add_handlers(r"oucena\.com", [
