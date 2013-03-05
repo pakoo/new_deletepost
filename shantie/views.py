@@ -31,6 +31,20 @@ from copy import deepcopy
 #    print 'argv:',dir(kwargs['signal']),
 #    print ">>>>>>>>>>>>>>>>>>>>>>>又完成了一个请求!!!" 
 #    print "page view=%s"%pv
+
+def get_pagination(page):
+    """
+    返回页码
+    """
+    ps = []
+    if 1<= page <=10:
+        pagination = range(1,11)
+        pagination.extend([20,50,100,500]) 
+    else:
+        pagination = range(page-5,page+5)
+    return pagination
+        
+
 def is_login(func) :
     """
     判断用户是否登录
@@ -125,8 +139,9 @@ def diba(request,page=1):
     print 'page:',page
     agent = request.META.get('HTTP_USER_AGENT','')
     page=int(page)
-    frontpage='/tieba/%s/'%(page-1)
-    nextpage='/tieba/%s/'%(page+1)
+    pagination = get_pagination(page)
+    frontpage='/liyi/%s/'%(page-1)
+    nextpage='/liyi/%s/'%(page+1)
     res = get_tieba_delete_post_url(page=page)
     user_session = request.session
     username = user_session.get('name',None)
@@ -138,6 +153,8 @@ def diba(request,page=1):
     post_data={'posts':data,
                'total_amount':total_amount,
                'hot_post':hot_post,
+               'page':page,
+               'pagination':pagination,
                 }
     if page >1:
         post_data['frontpage']=frontpage
@@ -268,8 +285,8 @@ def tieba_today_hot(request,page):
     print 'page:',page
     user_session =request.session 
     page=int(page)
-    frontpage='/tieba/hot/%s/'%(page-1)
-    nextpage='/tieba/hot/%s/'%(page+1)
+    frontpage='/liyi/hot/%s/'%(page-1)
+    nextpage='/liyi/hot/%s/'%(page+1)
     res = mdb.get_tieba_today_hot_post_url(page=page)
     #print 'data:',data
     if not res:
@@ -585,7 +602,7 @@ def write_reply(request):
             } 
             mdb.add_new_reply(int(url),reply_info)
             user_session['last_reply_time'] = int(time.time())
-        return  HttpResponseRedirect('/tieba/post/%s'%url)
+        return  HttpResponseRedirect('/liyi/post/%s'%url)
     else:
         return  HttpResponse('添加失败')
         
@@ -783,4 +800,9 @@ def info(request):
     return response
 
 
-mainpage = diba
+mainpage = real
+
+if __name__ == '__main__':
+    print get_paginative(1)
+    print get_paginative(5)
+    print get_paginative(15)

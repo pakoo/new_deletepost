@@ -45,17 +45,18 @@
 </div>
 
 <div class="row">
-<div class="span4 offset4">
-    <ul class="pager">
-    {% if frontpage %}
-        <li>
-        <a href="{{frontpage}}">上一页</a>
-        </li>
-    {% endif %}
-    <li>
-    <a href="{{nextpage}}">下一页</a>
-    </li>
-    </ul>
+<div class="span12 offset3">
+    <div class="pagination pagination-small">
+        <ul>
+            {% for p in pagination %}
+                {% if p == page  %}
+                    <li class="active" ><a href="/liyi/{{p}}/">{{p}}</a></li>
+                {% else %}
+                    <li ><a href="/liyi/{{p}}/">{{p}}</a></li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+    </div>
 </div>
 </div>
 
