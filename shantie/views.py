@@ -140,8 +140,6 @@ def diba(request,page=1):
     agent = request.META.get('HTTP_USER_AGENT','')
     page=int(page)
     pagination = get_pagination(page)
-    frontpage='/liyi/%s/'%(page-1)
-    nextpage='/liyi/%s/'%(page+1)
     res = get_tieba_delete_post_url(page=page)
     user_session = request.session
     username = user_session.get('name',None)
@@ -155,12 +153,8 @@ def diba(request,page=1):
                'hot_post':hot_post,
                'page':page,
                'pagination':pagination,
+               'barname':'liyi',
                 }
-    if page >1:
-        post_data['frontpage']=frontpage
-    else:
-        post_data['frontpage']=None
-    post_data['nextpage']=nextpage
     post_data['liyi']='active'
     post_data['username']=username
     #print 'HTTP_USER_AGENT:',request.META.get('HTTP_USER_AGENT',{})
@@ -179,8 +173,7 @@ def real(request,page=1):
     print 'username:',username
     agent = request.META.get('HTTP_USER_AGENT','')
     page=int(page)
-    frontpage='/real/%s/'%(page-1)
-    nextpage='/real/%s/'%(page+1)
+    pagination = get_pagination(page)
     res = mdb.get_tieba_today_hot_post_url(page=page)
     #print 'data:',data
     if not res:
@@ -190,12 +183,10 @@ def real(request,page=1):
     post_data={'posts':data,
                'total_amount':total_amount,
                'hot_post':hot_post,
+               'page':page,
+               'pagination':pagination,
+               'barname':'real',
                 }
-    if page >1:
-        post_data['frontpage']=frontpage
-    else:
-        post_data['frontpage']=None
-    post_data['nextpage']=nextpage
     post_data['real']='active'
     post_data['username']=username
     return render('hero.html',post_data)
