@@ -51,7 +51,7 @@ def get_hot_post(dbname):
     for tie in top10:
         print 'id:',tie['url'],'   click:',tie.get('click',0)
         if dbname =='tieba':
-            url = "/tieba/post/%s"%tie['url']
+            url = "/liyi/post/%s"%tie['url']
         else:
             url = "/kds/post/%s"%tie['url']
         hot_post.append(
@@ -94,7 +94,7 @@ def get_tieba_delete_post_url(page,count=50):
         for p in delete_post_list:
             #print 'post:',p['url']
             result.append([
-                          "/tieba/post/%s"%p['url'],
+                          "/liyi/post/%s"%p['url'],
                           p['title'],
                           transUinxtime2Strtime(p['find_time']),
                           p['user_name'],
@@ -125,7 +125,7 @@ def get_tieba_today_hot_post_url(page,count=50):
         for p in hot_post_list:
             print 'post:',p['url']
             result.append([
-                          "/tieba/post/%s"%p['url'],
+                          "/liyi/post/%s"%p['url'],
                           p['title'],
                           transUinxtime2Strtime(p['find_time']),
                           p['user_name'],
@@ -249,7 +249,7 @@ def search_post(keyword='',page=1,tieba_name='liyi'):
             for p in search_res:
                 print 'post:',p['url']
                 result.append([
-                              "/tieba/post/%s"%p['url'],
+                              "/liyi/post/%s"%p['url'],
                               p['title'],
                               transUinxtime2Strtime(p['find_time']),
                               p['user_name'],
