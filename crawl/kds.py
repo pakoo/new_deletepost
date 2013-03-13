@@ -23,6 +23,7 @@ import os.path
 from pymongo import ASCENDING,DESCENDING
 import requests
 from urlparse import urlparse
+import sys
 mktime=lambda dt:time.mktime(dt.utctimetuple())
 ######################db.init######################
 connection = pymongo.Connection('localhost', 27017)
@@ -687,22 +688,30 @@ def get_tieba_info(tieba_name='liyi'):
 
 
 if __name__ == "__main__":
-    #while True:
-    #    try:
-    #        #get_tieba_post("liyi")
-    #        #get_tieba_post("liyi")
-    #        #get_tieba_post("liyi")
-    #        #get_tieba_post("liyi")
-    #        #get_tieba_post("liyi")
-    #        #get_tieba_post("wow")
-    #        #get_tieba_post("meinv")
-    #        #get_tieba_post("jietuo")
-    #        get_kds_post()
-    #        #get_tieba_post_img("jietup")
-    #    except Exception,e:
-    #        print('\n'*9)
-    #        traceback.print_exc()
-    #        print('\n'*9)
+    if sys.argv[1] == 'test':
+        get_tieba_info()
+    elif sys.argv[1] == 'kds':
+        while True:
+            try:
+                get_kds_post()
+            except Exception,e:
+                print('\n'*9)
+                traceback.print_exc()
+                print('\n'*9)
+    else:
+        while True:
+            try:
+                get_tieba_post("liyi")
+                get_tieba_post("liyi")
+                get_tieba_post("liyi")
+                get_tieba_post("liyi")
+                get_tieba_post("liyi")
+                get_tieba_post_img("jietup")
+            except Exception,e:
+                print('\n'*9)
+                traceback.print_exc()
+                print('\n'*9)
+
 #print get_kds_post_reply('http://club.pchome.net/thread_1_15_7030170.html') #main()
 #    print save_post('thread_1_15_6751208__.html','test1',kds)
 #    print transtime('11-11-13 12:30')
@@ -718,4 +727,3 @@ if __name__ == "__main__":
     
     #print reply_img_insert(db_name = 'tieba',sort_name='liyi',img_url='http://imgsrc.baidu.com/forum/pic/item/0b46f21fbe096b6375fba8f70c338744eaf8acb3.jpg')
     #get_tieba_info()
-    get_kds_post()
