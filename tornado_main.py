@@ -34,14 +34,14 @@ def main():
     #('.*', tornado.web.FallbackHandler, dict(fallback=wsgi_app)),
     #])
 
-    tornado_app = tornado.web.Application(default_host='www\.404cn\.org',
+    tornado_app = tornado.web.Application(default_host="oucena\.com",
       handlers=[
-        ('.*', tornado.web.FallbackHandler, dict(fallback=wsgi_app)),
-        ])
+    	(r"/", app.weixin),
+    	(r"/static/(.*)", tornado.web.StaticFileHandler, {"path": "./static"}),
+    	    ])
 
-    tornado_app.add_handlers(r"oucena\.com", [
-    (r"/", app.weixin),
-    (r"/static/(.*)", tornado.web.StaticFileHandler, {"path": "./static"}),
+    tornado_app.add_handlers(r'www\.404cn\.org', [
+        ('.*', tornado.web.FallbackHandler, dict(fallback=wsgi_app)),
     ])
 
     tornado_app.add_handlers(r"www\.oucena\.com", [

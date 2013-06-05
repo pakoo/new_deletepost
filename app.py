@@ -194,7 +194,8 @@ class Application(tornado.web.Application):
         tornado.web.Application.__init__(self,handlers,**app_settings)
 
 if __name__ == '__main__':
-    http_server = tornado.httpserver.HTTPServer(request_callback=Application())
-    http_server.listen(8080)
+    #http_server = tornado.httpserver.HTTPServer(request_callback=Application())
+    #http_server.listen(8080)
 
-    tornado.ioloop.IOLoop.instance().start()
+    #tornado.ioloop.IOLoop.instance().start()
+    print get_pm('shanghai')

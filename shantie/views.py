@@ -575,8 +575,8 @@ def write_reply(request):
     if user_session.get('last_reply_time',None):
         last_reply_time = int(user_session.get('last_reply_time'))
         print 'last_reply_time:',last_reply_time
-        if time.time()-last_reply_time <= 30:
-            return  HttpResponse('评论间隔太多请等30秒后再提交评论!!')
+        if time.time()-last_reply_time <= 3600:
+            return  HttpResponse('评论间隔太多请等3600秒后再提交评论!!')
     text = request.POST.get('text','')
     print 'text:',text
     if text:

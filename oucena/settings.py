@@ -6,6 +6,15 @@ DEBUG = True
 #DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 
+
+#========================
+# USER add config
+#SESSION_COOKIE_HTTPONLY = True
+#SESSION_COOKIE_PATH = ';HttpOnly'
+#========================
+
+
+
 ADMINS = (
     # ('Your Name', 'your_email@example.com'),
 )

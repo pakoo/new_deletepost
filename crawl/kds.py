@@ -636,7 +636,7 @@ def get_tieba_reply_img(post_soup,sort_name,post_url,page=1):
     for reply in reply_list:
         if reply is None :
             continue
-        d_post_content = reply.find('div',{'class':'d_post_content'})
+        d_post_content = reply.find('div',{'class':'d_post_content_main '})
         p_tail = reply['data-field']
         if p_tail:
             p_tail = json.loads(p_tail)
@@ -727,4 +727,4 @@ if __name__ == "__main__":
     
     #print reply_img_insert(db_name = 'tieba',sort_name='liyi',img_url='http://imgsrc.baidu.com/forum/pic/item/0b46f21fbe096b6375fba8f70c338744eaf8acb3.jpg')
     #get_tieba_info()
-    #get_tieba_post("liyi")
+    get_tieba_post("jietup")

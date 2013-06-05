@@ -315,6 +315,9 @@ def add_advice(content,name='',ip=''):
     """
     print 'content:',content
     print 'name:',name
+    last_reply = db_web.advice.find_one({'ip':ip},sort=[('create_time',DESCENDING)])
+    if last_reply and time.time()-last_reply['create_time']<3600:
+	return
     if len(content) > 140:
         print "留言太长!!!"
     else:
