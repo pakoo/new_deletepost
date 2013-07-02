@@ -52,7 +52,7 @@ def is_login(func) :
     def check(request,*args,**kargs):
         user_session =request.session 
         print 'user_session is_admin:',user_session.get('is_admin',0)
-        #if user_session.get('sessionid',0):
+        #if user_session.get('udi',0):
         if user_session.get('is_admin',0) != 1: 
             return HttpResponseRedirect('/admin')
         else:
@@ -88,7 +88,7 @@ def get_html(url):
     return html
 
 #def mainpage(request):
-    #print 'session id:',request.session['sessionid']
+    #print 'session id:',request.session['uid']
     #print 'cookie:',request.COOKIES
     #res =  request.session.test_cookie_worked()
     #if res:
@@ -247,7 +247,7 @@ def kds_backend(request,page):
     return render('kds_backend.html',post_data)
 @is_login 
 def tieba_backend(request,page):
-    #print 'session id:',request.session['sessionid']
+    #print 'session id:',request.session['uid']
     print 'page:',page
     user_session =request.session 
     page=int(page)
@@ -272,7 +272,7 @@ def tieba_backend(request,page):
 
 @is_login
 def tieba_today_hot(request,page):
-    #print 'session id:',request.session['sessionid']
+    #print 'session id:',request.session['uid']
     print 'page:',page
     user_session =request.session 
     page=int(page)
@@ -508,8 +508,13 @@ def send_advice(request):
     发送建议
     """
     ip = request.META['REMOTE_ADDR']
+    user_session =request.session 
     print 'ip:',ip
     print 'POST:',request.POST
+    print 'user_session is_login:',user_session.get('is_login',0)
+    print 'user_sessionid:',user_session.get('uid',0)
+    if not user_session.get('is_login',0):
+            return  HttpResponse('get out ')
     user_session = request.session
     username = user_session.get('name',None)
     if not username :
@@ -569,18 +574,22 @@ def write_reply(request):
     username = user_session.get('name',None)
     if not username:
         username = '404网友'
+    print 'ua:',request.META.get('HTTP_USER_AGENT','')
     print 'user_session is_login:',user_session.get('is_login',0)
-    print 'user_sessionid:',user_session.get('sessionid',0)
+    print 'user_sessionid:',user_session.get('uid',0)
+    print 'ip:',request.META['REMOTE_ADDR']
     print 'url :',url
+    text = request.POST.get('text','')
+    print 'text:',text
+    if not user_session.get('is_login',0):
+            return  HttpResponse('get out ')
     if user_session.get('last_reply_time',None):
         last_reply_time = int(user_session.get('last_reply_time'))
         print 'last_reply_time:',last_reply_time
         if time.time()-last_reply_time <= 3600:
             return  HttpResponse('评论间隔太多请等3600秒后再提交评论!!')
-    text = request.POST.get('text','')
-    print 'text:',text
     if text:
-        if len(text) >300:
+        if len(text) >100:
             return  HttpResponse('字数太多超过300字了!!')
 
         else:
@@ -665,6 +674,7 @@ def create_new_user(request):
     """
     注册
     """
+    user_session =request.session 
     ip = request.META['REMOTE_ADDR']
     username = request.POST.get('username','').strip()
     password = request.POST.get('password','').strip()

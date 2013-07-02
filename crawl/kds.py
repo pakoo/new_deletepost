@@ -727,9 +727,6 @@ if __name__ == "__main__":
     
     #print reply_img_insert(db_name = 'tieba',sort_name='liyi',img_url='http://imgsrc.baidu.com/forum/pic/item/0b46f21fbe096b6375fba8f70c338744eaf8acb3.jpg')
     #get_tieba_info()
-<<<<<<< HEAD
-    get_tieba_post("jietup")
-=======
+    #get_tieba_post("jietup")
     #get_tieba_post("liyi")
     #get_tieba_post_img("jietup")
->>>>>>> cadedcd949049495e5cf119199c448ca18f34b3a

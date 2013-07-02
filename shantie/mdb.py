@@ -49,7 +49,7 @@ def get_hot_post(dbname):
 
     hot_post = []
     for tie in top10:
-        print 'id:',tie['url'],'   click:',tie.get('click',0)
+        #print 'id:',tie['url'],'   click:',tie.get('click',0)
         if dbname =='tieba':
             url = "/liyi/post/%s"%tie['url']
         else:
@@ -65,7 +65,6 @@ def get_delete_post_url(page,count=50):
     result=[]
 #    delete_post_list=db_post.find()
     delete_post_list=kds.post.find({'is_open':debug_flag},limit=count,skip=count*(page-1),sort=[('create_time',DESCENDING)])
-    print 'delete_post_list:',delete_post_list
     if delete_post_list.count()>0:
         item_num=0
         for p in delete_post_list:
@@ -83,7 +82,6 @@ def get_delete_post_url(page,count=50):
         return None
 
 def get_tieba_delete_post_url(page,count=50):
-    print 'a'
     result=[]
     hot_post = get_hot_post('tieba')
     delete_post_list=tieba.post.find({'is_open':debug_flag,'tieba_name':'liyi'},{'url':1,'title':1,'find_time':1,'user_name':1,'click':1,'is_liang':1},limit=count,skip=count*(page-1),sort=[('find_time',DESCENDING)])
@@ -123,7 +121,7 @@ def get_tieba_today_hot_post_url(page,count=50):
     if hot_post_list.count()>0:
         item_num=0
         for p in hot_post_list:
-            print 'post:',p['url']
+            #print 'post:',p['url']
             result.append([
                           "/liyi/post/%s"%p['url'],
                           p['title'],
@@ -149,7 +147,7 @@ def get_filter_post_url(page,count=50):
     if hot_post_list.count()>0:
         item_num=0
         for p in hot_post_list:
-            print 'post:',p['url']
+            #print 'post:',p['url']
             result.append([
                           "/fuli/%s"%p['url'],
                           p['title'],
@@ -201,14 +199,12 @@ def delete_post(post_url,dbname):
     """
     delete post
     """
-    print 'dbname:',dbname
     db_post = con[dbname].post
     db_ban_user = con[dbname].ban_user
     if dbname == 'tieba':
         post=db_post.find_one({'url':int(post_url)})
     elif dbname == 'kds':
         post=db_post.find_one({'url':post_url})
-    print 'post:',post
     if post:
         db_post.remove(post['_id'])
         ban_user_check = db_ban_user.find_one({'user_name':post['user_name']})
@@ -226,7 +222,6 @@ def hide_post(post_url,dbname):
     """
     hide post
     """
-    print 'dbname:',dbname
     db_post = con[dbname].post
     db_ban_user = con[dbname].ban_user
     if dbname == 'tieba':
@@ -247,7 +242,6 @@ def search_post(keyword='',page=1,tieba_name='liyi'):
             hot_post = get_hot_post('tieba')
             item_num=0
             for p in search_res:
-                print 'post:',p['url']
                 result.append([
                               "/liyi/post/%s"%p['url'],
                               p['title'],
@@ -265,7 +259,6 @@ def create_admin(name,password,ip='',email=''):
     创建用户
     """
     if name and password:
-        print 'name:',name
         print 'password:',password
     else:
         return 0

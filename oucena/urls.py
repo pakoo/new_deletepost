@@ -49,7 +49,7 @@ urlpatterns = patterns('',
 
 
      url(r'^search/(?P<keyword>\w+)/(?P<page>\d+)', 'shantie.views.search_post'),
-     url(r'^admin', 'shantie.views.manage_login'),
+     url(r'^admin/$', 'shantie.views.manage_login'),
      url(r'^advice', 'shantie.views.advice_board'),
      url(r'^xlogin', 'shantie.views.admin_login'),
      url(r'^xlogout', 'shantie.views.admin_logout'),
