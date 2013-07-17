@@ -181,6 +181,14 @@ class www(tornado.web.RequestHandler):
         #self.finish(loader.load('base.html').generate({}))
         self.render('tufuli/base.html',mainpage='active')
 
+
+class heregoo(tornado.web.RequestHandler):
+
+    def get(self):
+        #loader = tornado.template.Loader("./tufuli/")
+        #self.finish(loader.load('base.html').generate({}))
+        self.render('tufuli/base.html',mainpage='active')
+
 class Application(tornado.web.Application):
     def __init__(self):
         app_settings={
