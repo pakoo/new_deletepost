@@ -57,7 +57,7 @@ def main():
 
     tornado_app.add_handlers(r"heregoo\.com", [
     (r"/root.txt", app.tufuli),
-    (r"/", app.www),
+    (r"/top/([0-9]+)/", app.www),
     (r"/static/(.*)", tornado.web.StaticFileHandler, {"path": "./static"}),
     ])
 
