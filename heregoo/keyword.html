@@ -1,0 +1,38 @@
+﻿{% extends "base.html" %}
+
+
+{% block title %}搜索关键词{% end%}
+
+{% block content %}
+
+<div class="container">
+    <div class="row">
+    <div class="span4">
+        <form class="form-horizontal " action="/add_keyword" method="post">
+            <fieldset>
+            <legend>关键词列表</legend>
+            {%for word in keywords%}
+            <ul>
+                <li >{{word['name']}}</li>
+            </ul>
+            {%end%}
+            <legend>新增关键词</legend>
+            <label>选择分类</label>
+            <select multiple="multiple" name="category">
+                <option name="category">digit</option>
+                <option name="category">3c</option>
+            </select>
+            <br>
+            <br>
+            <br>
+            <input type="text" class="input-medium search-query" name="keyword" >
+            <button type="submit" class="btn" >添加</button>
+          
+            </fieldset>
+        </form>
+        </div>
+    </div>
+</div>
+
+{% end%}
+
