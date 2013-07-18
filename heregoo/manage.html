@@ -1,0 +1,82 @@
+﻿{% extends "base.html" %}
+
+
+{% block title %}后台管理{% end%}
+
+{% block navbar %}
+{% end%}
+
+{% block content %}
+<div class="container">
+
+<!-- Main hero unit for a primary marketing message or call to action -->
+<div class="hero-unit">
+<h1>后台</h1>
+<p id="total_amount">0</p>
+</div>
+
+<!-- Example row of columns -->
+<div class="row">
+<div class="span12">
+    <table class="table">
+    <thead>
+      <tr>
+        <th>关键词</th>
+        <th>来源</th>                
+        <th>物品名</th>
+        <th>id</th>
+        <th>原价</th>      
+        <th>现价</th>        
+        <th>最近销量</th>                
+        <th>总销量</th>                
+        <th>入库时间</th>                
+        <th>最后更新时间</th>                
+      </tr>
+    </thead>
+    <tbody>
+        {% for item in items %}
+            <tr>
+            <td>{{item.get('keyword')}}</td>
+            {%if item['site'] == 'tb'%}
+            <td>淘宝</td>
+            <td><a href="http://item.taobao.com/item.htm?id={{item['itemid']}}">{{item['itemname'][:20]}}</a></td>
+            {%else%}
+            <td>天猫</td>
+            <td><a href="http://detail.tmall.com/item.htm?id={{item['itemid']}}">{{item['itemname'][:20]}}</a></td>
+            {%end%}
+            <td>{{item['itemid']}}</td>
+            <td>{{item['price']}}</td>
+            <td>{{item['realprice']}}</td>
+            <td>{{item['quantity']}}</td>
+            <td>{{item['total_count']}}</td>
+            <td>{{item['createtime'].strftime('%Y-%m-%d %H:%M')}}</td>
+            <td>{{item['lastupdatetime'].strftime('%Y-%m-%d %H:%M')}}</td>
+            <td><button href="#" class="btn btn-warning hidepost" >隐藏</button></td>            
+            <td><button href="#" class="btn btn-danger remove" >删除</button></td>            
+            </tr>
+            
+        {% end%}
+
+    </tbody>
+
+    </table>
+</div>
+</div>
+
+<div class="row">
+    <div class="span4 offset4">
+        <ul class="pager">
+        {% if page>1 %}
+        <li>
+        <a href="/top/{{page-1}}/">上一页</a>
+        </li>
+        {% end %}
+        <li>
+        <a href="/top/{{page+1}}/">下一页</a>
+        </li>
+        </ul>
+        </div>
+</div>
+
+     
+{% end%}

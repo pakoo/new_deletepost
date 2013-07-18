@@ -12,7 +12,9 @@ from pymongo import MongoClient
 from pymongo import ASCENDING,DESCENDING
 
 con = MongoClient('localhost',27017)
+
 db = con.air.pm
+goo = con.x
 
 text_tmp = """
 <xml>
@@ -47,6 +49,10 @@ item_tmp = """
         <Url><![CDATA[%s]]></Url>
     </item>
            """
+
+
+def get_all_item(page=1,count=50):
+    return goo.item.find(skip=(page-1)*count,limit=50)
 
 def get_pm(place):
     res = db.find_one({'location':place},sort=[('create_time',DESCENDING)])    
@@ -184,10 +190,12 @@ class www(tornado.web.RequestHandler):
 
 class heregoo(tornado.web.RequestHandler):
 
-    def get(self):
-        #loader = tornado.template.Loader("./tufuli/")
-        #self.finish(loader.load('base.html').generate({}))
-        self.render('tufuli/base.html',mainpage='active')
+    def get(self,page):
+        page = int(page)
+        if page >0:
+            self.render('heregoo/manage.html',items=get_all_item(page),page=page)
+        else:
+            self.finish('fuck you')
 
 class Application(tornado.web.Application):
     def __init__(self):
@@ -196,14 +204,15 @@ class Application(tornado.web.Application):
         }
         handlers = [
             #(r'/',weixin),
-            (r'/',www),
+            (r'/top/([0-9]+)/',heregoo),
             (r"/static/(.*)", tornado.web.StaticFileHandler, {"path": "./static"}),
         ]
         tornado.web.Application.__init__(self,handlers,**app_settings)
 
 if __name__ == '__main__':
-    #http_server = tornado.httpserver.HTTPServer(request_callback=Application())
-    #http_server.listen(8080)
+    pass
+    http_server = tornado.httpserver.HTTPServer(request_callback=Application())
+    http_server.listen(8080)
 
-    #tornado.ioloop.IOLoop.instance().start()
-    print get_pm('shanghai')
+    tornado.ioloop.IOLoop.instance().start()
+    #print get_all_item()[0]
