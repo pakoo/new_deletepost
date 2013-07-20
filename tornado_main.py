@@ -13,6 +13,7 @@ import tornado.ioloop
 import tornado.web
 import tornado.wsgi
 import app
+from heregoo import api
 
 define('port', type=int, default=80)
 
@@ -56,10 +57,9 @@ def main():
     ])
 
     tornado_app.add_handlers(r"heregoo\.com", [
-    (r"/root.txt", app.tufuli),
-    (r"/top/([0-9]+)/", app.heregoo),
-    (r'/keyword/',app.heregoo_keyword),               
-    (r'/add_keyword',app.heregoo_add_keyword),
+    (r"/top/([0-9]+)/", api.heregoo),
+    (r'/keyword/',api.heregoo_keyword),               
+    (r'/add_keyword',api.heregoo_add_keyword),
     (r"/static/(.*)", tornado.web.StaticFileHandler, {"path": "./static"}),
     ])
 
