@@ -79,6 +79,7 @@ class Application(tornado.web.Application):
             (r'/top/([0-9]+)/',heregoo),
             (r'/keyword/',heregoo_keyword),
             (r'/add_keyword',heregoo_add_keyword),
+            (r'/shop/([0-9]+)/',heregoo_shop),
             (r'/static/(.*)', tornado.web.StaticFileHandler, {"path": "../static"}),
         ]
         tornado.web.Application.__init__(self,handlers,**app_settings)
