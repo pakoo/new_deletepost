@@ -24,6 +24,7 @@ from pymongo import ASCENDING,DESCENDING
 import requests
 from urlparse import urlparse
 import sys
+import urllib
 mktime=lambda dt:time.mktime(dt.utctimetuple())
 ######################db.init######################
 connection = pymongo.Connection('localhost', 27017)
@@ -423,7 +424,8 @@ def get_tieba_post_img(tieba_name='liyi'):
     """
     抓取百度贴白有些的帖子地址
     """
-    url = "http://tieba.baidu.com/f?kw=%s"%tieba_name
+    par = urllib.urlencode({'kw':tieba_name.encode('gb2312')}) 
+    url = "http://tieba.baidu.com/f?%s"%par
     tieba_url_root = "http://tieba.baidu.com"
     tieba_html = get_html(url)
 
@@ -707,7 +709,7 @@ if __name__ == "__main__":
                 get_tieba_post("liyi")
                 get_tieba_post("liyi")
                 get_tieba_post("liyi")
-                get_tieba_post_img("jietup")
+                get_tieba_post_img(u"姐脱")
             except Exception,e:
                 print('\n'*9)
                 traceback.print_exc()
