@@ -312,9 +312,10 @@ def get_tieba_post(tieba_name='liyi'):
     if tieba_html:
         soup = BeautifulSoup(tieba_html,fromEncoding='gbk')
         thread_list = soup.find('ul',{'id':'thread_list'})
-        post_list = thread_list.findAll('li',{'class':'j_thread_list'})
+        #print 'thread_list:',thread_list
+        post_list = thread_list.findAll('li',{'class':'j_thread_list clearfix'})
         #print "post_list:",len(post_list)
-        for p in post_list:
+        for p in post_list[2:]:
             #print '===================================\n'
             #print 'row:',p
             time.sleep(3)
@@ -329,7 +330,7 @@ def get_tieba_post(tieba_name='liyi'):
             #print "title:",div_title
             div_author = p.find('div',{'class':'threadlist_author'}).span.a
             #print "author:",div_author
-            div_reply = p.find('div',{'class':'threadlist_rep_num j_rp_num'})
+            div_reply = p.find('div',{'class':'threadlist_rep_num'})
             #print "reply:",div_reply
             url = div_title['href'][1:]
             post_url=str(os.path.join(tieba_url_root,url))
