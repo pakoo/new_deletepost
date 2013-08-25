@@ -11,7 +11,7 @@
 
 <!-- Main hero unit for a primary marketing message or call to action -->
 <div class="hero-unit">
-<h1>店铺后台</h1>
+<h1>物品日志</h1>
 <p id="total_amount">0</p>
 </div>
 
@@ -22,27 +22,28 @@
     <thead>
       <tr>
         <th>来源</th>
-        <th>店铺名</th>
-        <th>店铺id</th>                
-        <th>卖家id</th>
-        <th>入库时间</th>
-        <th>最后更新时间</th>                
+        <th>物品名</th>
+        <th>价格</th>                
+        <th>最近销量</th>
+        <th>出售总量</th>
+        <th>更新时间</th>                
       </tr>
     </thead>
     <tbody>
-        {% for shop in shops %}
+        {% for log in logs %}
             <tr>
-            {%if shop['site'] == 'tb'%}
+            {%if log['site'] == 'tb'%}
             <td>淘宝</td>
             <td><a href="http://{{shop['url']}}">{{shop['name'][:20]}}</a></td>
             {%else%}
             <td>天猫</td>
             <td><a href="http://{{shop['url']}}">{{shop['name'][:20]}}</a></td>
             {%end%}
-            <td>{{shop['sid']}}</td>
-            <td>{{shop['sellerid']}}</td>
+            <td>{{log['name']}}</td>
+            <td>{{shop['price']}}</td>
+            <td>{{shop['quantity']}}</td>
+            <td>{{shop['total_count']}}</td>
             <td>{{shop['createtime'].strftime('%Y-%m-%d %H:%M')}}</td>
-            <td>{{shop['lastupdatetime'].strftime('%Y-%m-%d %H:%M')}}</td>
             <td><button href="#" class="btn btn-danger remove" >删除</button></td>            
             </tr>
             

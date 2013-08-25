@@ -29,13 +29,17 @@ def get_all_keyword(category='',page=1,count=50):
 def add_new_keyword(name,category='digit',weight=1):
     if not goo.keyword.find_one({'name':name}):
         print 'add new keyword "%s"'%name
-        goo.keyword.insert({'name':name,'category':category,'createtime':datetime.now(),'weight':weight})
+        goo.keyword.insert({'name':name,'category':category,'createtime':datetime.now(),'lastupdatetime':datetime.now(),'weight':weight})
 
 
 def get_all_shop(page=1,count=50):
     """
     """
     return goo.shop.find(skip=(page-1)*count,limit=50)
+
+def get_item_log(itemid,site,page=1,count=50):
+    #return goo.itemlog.find({'itemid':itemid,'site':site},skip=(page-1)*count,limit=50)
+    return goo.itemlog.find({'itemid':itemid},skip=(page-1)*count,limit=50)
 
 class heregoo(tornado.web.RequestHandler):
 
@@ -61,6 +65,19 @@ class heregoo_shop(tornado.web.RequestHandler):
         else:
             self.finish('fuck you')
 
+class heregoo_itemlog(tornado.web.RequestHandler):
+
+    def get(self,site,itemid,page):
+        page = int(page)
+        itemid = int(itemid)
+        print 'site:',site
+        print 'itemid:',itemid
+        print 'page:',page
+        if page >0:
+            self.render('itemlog.html',logs=get_item_log(site,itemid,page=page),page=page)
+        else:
+            self.finish('fuck you')
+
 class heregoo_add_keyword(tornado.web.RequestHandler):
 
     def post(self):
@@ -80,6 +97,7 @@ class Application(tornado.web.Application):
             (r'/keyword/',heregoo_keyword),
             (r'/add_keyword',heregoo_add_keyword),
             (r'/shop/([0-9]+)/',heregoo_shop),
+            (r'/itemlog/(\w*)/(\d+)/(\d+)/',heregoo_itemlog),
             (r'/static/(.*)', tornado.web.StaticFileHandler, {"path": "../static"}),
         ]
         tornado.web.Application.__init__(self,handlers,**app_settings)
