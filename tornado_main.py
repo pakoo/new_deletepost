@@ -61,6 +61,7 @@ def main():
     (r'/keyword/',api.heregoo_keyword),               
     (r'/add_keyword',api.heregoo_add_keyword),
     (r"/static/(.*)", tornado.web.StaticFileHandler, {"path": "./static"}),
+    (r'/itemlog/(\w*)/(\d+)/(\d+)/',api.heregoo_itemlog),
     ])
 
     server = tornado.httpserver.HTTPServer(tornado_app)
