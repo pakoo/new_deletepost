@@ -39,11 +39,10 @@
             <td>{{item.get('keyword')}}</td>
             {%if item['site'] == 'tb'%}
             <td><a href="http://item.taobao.com/item.htm?id={{item['itemid']}}">淘宝</a></td>
-            <td>{{item['itemname'][:20]}}</a></td>
             {%else%}
             <td><a href="http://detail.tmall.com/item.htm?id={{item['itemid']}}">天猫</a></td>
-            <td><a href="/itemlog/{{item['site']}}/{{item['itemid']}}/1/">{{item['itemname'][:25]}}</a></td>
             {%end%}
+            <td><a href="/itemlog/{{item['site']}}/{{item['itemid']}}/1/">{{item['itemname'][:25]}}</a></td>
             <td>{{item['itemid']}}</td>
             <td>{{item['price']}}</td>
             <td>{{item['realprice']}}</td>

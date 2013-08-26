@@ -74,7 +74,7 @@ class heregoo_itemlog(tornado.web.RequestHandler):
         print 'itemid:',itemid
         print 'page:',page
         if page >0:
-            self.render('itemlog.html',logs=get_item_log(site,itemid,page=page),page=page)
+            self.render('itemlog.html',logs=get_item_log(itemid,site,page=page),page=page,site=site,itemid=itemid)
         else:
             self.finish('fuck you')
 
@@ -111,3 +111,4 @@ if __name__ == '__main__':
     #print get_all_item()[0]
     #add_new_keyword('macbook air')
     #print get_all_keyword()
+    #print get_item_log(20879975286,'tm',page=1,count=50)

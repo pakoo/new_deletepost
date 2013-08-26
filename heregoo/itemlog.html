@@ -34,16 +34,14 @@
             <tr>
             {%if log['site'] == 'tb'%}
             <td>淘宝</td>
-            <td><a href="http://{{shop['url']}}">{{shop['name'][:20]}}</a></td>
             {%else%}
             <td>天猫</td>
-            <td><a href="http://{{shop['url']}}">{{shop['name'][:20]}}</a></td>
             {%end%}
             <td>{{log['name']}}</td>
-            <td>{{shop['price']}}</td>
-            <td>{{shop['quantity']}}</td>
-            <td>{{shop['total_count']}}</td>
-            <td>{{shop['createtime'].strftime('%Y-%m-%d %H:%M')}}</td>
+            <td>{{log['price']}}</td>
+            <td>{{log['quantity']}}</td>
+            <td>{{log['total_count']}}</td>
+            <td>{{log['createtime'].strftime('%Y-%m-%d %H:%M')}}</td>
             <td><button href="#" class="btn btn-danger remove" >删除</button></td>            
             </tr>
             
@@ -60,11 +58,11 @@
         <ul class="pager">
         {% if page>1 %}
         <li>
-        <a href="/shop/{{page-1}}/">上一页</a>
+        <a href="/itemlog/{{site}}/{{itemid}}/{{page-1}}/">上一页</a>
         </li>
         {% end %}
         <li>
-        <a href="/shop/{{page+1}}/">下一页</a>
+        <a href="/itemlog/{{site}}/{{itemid}}/{{page+1}}/">下一页</a>
         </li>
         </ul>
         </div>
