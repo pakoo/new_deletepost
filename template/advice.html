@@ -17,7 +17,7 @@
                     {% if username %}
                     <input type="text" name="nickname" class="input-xlarge" value="{{username}}" disabled>
                     {% else %}
-                    <input type="text" name="nickname" class="input-xlarge" placeholder="屌丝欢">
+                    <input type="text" name="nickname" maxlength="20" class="input-xlarge" id="nickname" placeholder="屌丝欢">
                     {% endif %}
                     <p class="help-block">
                         给自己取个名字
@@ -28,7 +28,7 @@
             <div class="control-group">
                 <label for="textarea" class="control-label">留言内容</label>
                 <div class="controls">
-                <textarea rows="10" name="advice" class="input-xxlarge"></textarea>
+                <textarea rows="10" name="advice" maxlength="140" class="input-xxlarge" id="msg" ></textarea>
                 </div>
             </div>
             
@@ -41,5 +41,21 @@
     </div>
 </div>
 
+{% endblock %}
+
+{% block script %}
+    <script type="text/javascript" >
+    $(document).ready(function(){
+    $('input#defaultconfig').maxlength()
+        $('input#nickname').maxlength({
+        alwaysShow: true,
+        });
+
+        $('textarea#msg').maxlength({
+        alwaysShow: true
+        });
+
+    });
+    </script>
 {% endblock %}
 
