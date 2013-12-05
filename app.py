@@ -221,10 +221,16 @@ class weixin(tornado.web.RequestHandler):
         n = datetime.now()
         if n.month < 10:
             month = "0%s"%n.month
+        else:
+            month = n.month
         if n.day < 10:
             day = "0%s"%n.day
+        else:
+            day = n.day
         if n.hour < 10:
             hour = "0%s"%n.hour
+        else:
+            hour = n.hour
         url = "http://www.semc.gov.cn/aqi/home/images/pic/%s%s%s%s00.jpg"%(n.year,month,day,hour)
         return url
         
