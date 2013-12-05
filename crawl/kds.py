@@ -552,7 +552,8 @@ def get_tieba_reply(post_soup,sort_name,post_url,page=1):
         #p_author = reply.find('ul',{'class':'p_author'}).findAll('li')
         if reply is None :
             continue
-        d_post_content = reply.find('div',{'class':'d_post_content_main '})
+        #d_post_content = reply.find('div',{'class':'p_content '})
+        d_post_content = reply.find('cc')
         p_tail = reply['data-field']
         if p_tail:
             p_tail = json.loads(p_tail)
@@ -709,7 +710,7 @@ if __name__ == "__main__":
                 get_tieba_post("liyi")
                 get_tieba_post("liyi")
                 get_tieba_post("liyi")
-                get_tieba_post_img(u"姐脱")
+                #get_tieba_post_img(u"姐脱")
             except Exception,e:
                 print('\n'*9)
                 traceback.print_exc()
