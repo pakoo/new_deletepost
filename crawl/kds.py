@@ -546,13 +546,14 @@ def get_tieba_reply(post_soup,sort_name,post_url,page=1):
     author_name = '' 
     is_liang = 0
     for reply in reply_list:
-        #print '>'*150
-        #print '第%s楼'%rcount
+        print '>'*150
+        print '第%s楼'%rcount
         #print 'reply:',reply
         #p_author = reply.find('ul',{'class':'p_author'}).findAll('li')
         if reply is None :
             continue
-        d_post_content = reply.find('div',{'class':'d_post_content_main '})
+        #d_post_content = reply.find('div',{'class':'p_content '})
+        d_post_content = reply.find('cc')
         p_tail = reply['data-field']
         if p_tail:
             p_tail = json.loads(p_tail)
@@ -566,12 +567,12 @@ def get_tieba_reply(post_soup,sort_name,post_url,page=1):
             user_name = ''
             user_id =-1 
 
-        #print 'd_post_content:',str(d_post_content)
+        print 'd_post_content:',str(d_post_content)
         #print 'user name:',user_name
         #print 'user id:',user_id
         #print 'create_time:',create_time
         reply_content_img_list = d_post_content.findAll('img')
-        #print 'reply_content_img_list:',reply_content_img_list
+        print 'reply_content_img_list:',reply_content_img_list
         if rcount ==1 :
             author_name = user_name
 
@@ -709,7 +710,7 @@ if __name__ == "__main__":
                 get_tieba_post("liyi")
                 get_tieba_post("liyi")
                 get_tieba_post("liyi")
-                get_tieba_post_img(u"姐脱")
+                #get_tieba_post_img(u"姐脱")
             except Exception,e:
                 print('\n'*9)
                 traceback.print_exc()
