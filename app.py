@@ -11,6 +11,7 @@ import pymongo
 from pymongo import MongoClient
 from pymongo import ASCENDING,DESCENDING
 from datetime import datetime
+import requests
 
 con = MongoClient('localhost',27017)
 
@@ -70,6 +71,49 @@ def get_level(data):
         return "空气状况:重度污染,建议不外出"
     else:
         return "空气状况:严重污染,建议不外出"
+
+def update_menu():
+    """
+    更新菜单
+    """
+    menu = {
+        "button":[
+                    { 
+                    #"type":"click",
+                    "name":"城市",
+                    "sub_button":[
+                                {
+                                "type":"click",
+                                "name":"上海",
+                                "key":"shanghai"
+                                },
+                                {
+                                "type":"click",
+                                "name":"北京",
+                                "key":"beijing"
+                                },
+                                {
+                                "type":"click",
+                                "name":"广州",
+                                "key":"guangzhou"
+                                },
+                                {
+                                "type":"click",
+                                "name":"成都",
+                                "key":"chengdu"
+                                },
+                                ]
+                    },
+
+                    {
+                    "type":"view",
+                    "name":"官网",
+                    "url":"http://www.oucena.com/"
+                    },
+
+                ]
+    }
+
 
 class weixin(tornado.web.RequestHandler):
 
@@ -143,7 +187,11 @@ class weixin(tornado.web.RequestHandler):
                 self.send_text(a)    
                 return 
             air_level =get_level(int(float(pm25)))  
-            self.send_text("%s %s PM2.5:%s  %s "%(ctime,place,pm25,air_level))    
+            msg = "%s %s PM2.5:%s  %s "%(ctime,place,pm25,air_level)
+            if self.wxtext ==1:
+                self.send_air_pic(pm25,msg)
+            else:
+                self.send_text(msg)    
         elif self.msgtype == 'location':
             self.send_text('我收到你消息啦!!')
         elif self.msgtype == 'image':
@@ -162,6 +210,24 @@ class weixin(tornado.web.RequestHandler):
         logging.info(items_str)
         res = news_tmp%(self.userid,self.myid,int(time.time()),len(items),items_str) 
         self.finish(res)
+
+    def send_air_pic(self,pm25,msg):
+        pic_url = self.get_shanghai_air_pic()
+        items = [('上海PM2.5浓度为:%s'%pm25,msg,pic_url,pic_url)]  
+        self.send_news(self,items)
+
+    def get_shanghai_air_pic(self):
+        #url = "http://www.semc.gov.cn/aqi/home/images/pic/201312051500.jpg"
+        n = datetime.now()
+        if n.month < 10:
+            month = "0%s"%n.month
+        if n.day < 10:
+            day = "0%s"%n.day
+        if n.hour < 10:
+            hour = "0%s"%n.hour
+        url = "http://www.semc.gov.cn/aqi/home/images/pic/%s%s%s%s00.jpg"%(n.year,month,day,hour)
+        return url
+        
         
             
 class towww(tornado.web.RequestHandler):
@@ -200,7 +266,7 @@ class Application(tornado.web.Application):
 if __name__ == '__main__':
     pass
     http_server = tornado.httpserver.HTTPServer(request_callback=Application())
-    http_server.listen(8080)
+    http_server.listen(80)
     tornado.ioloop.IOLoop.instance().start()
 
     #print get_all_item()[0]
