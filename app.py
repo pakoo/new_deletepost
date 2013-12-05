@@ -232,6 +232,7 @@ class weixin(tornado.web.RequestHandler):
         else:
             hour = n.hour
         url = "http://www.semc.gov.cn/aqi/home/images/pic/%s%s%s%s00.jpg"%(n.year,month,day,hour)
+        print 'shanghai air pic:',url
         return url
         
         
