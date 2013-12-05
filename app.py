@@ -188,7 +188,7 @@ class weixin(tornado.web.RequestHandler):
                 return 
             air_level =get_level(int(float(pm25)))  
             msg = "%s %s PM2.5:%s  %s "%(ctime,place,pm25,air_level)
-            if self.wxtext ==1:
+            if self.wxtext =="1":
                 self.send_air_pic(pm25,msg)
             else:
                 self.send_text(msg)    
