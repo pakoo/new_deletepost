@@ -214,7 +214,7 @@ class weixin(tornado.web.RequestHandler):
     def send_air_pic(self,pm25,msg):
         pic_url = self.get_shanghai_air_pic()
         items = [('上海PM2.5浓度为:%s'%pm25,msg,pic_url,pic_url)]  
-        self.send_news(self,items)
+        self.send_news(items)
 
     def get_shanghai_air_pic(self):
         #url = "http://www.semc.gov.cn/aqi/home/images/pic/201312051500.jpg"
