@@ -217,7 +217,6 @@ class weixin(tornado.web.RequestHandler):
         self.send_news(items)
 
     def get_shanghai_air_pic(self):
-        #url = "http://www.semc.gov.cn/aqi/home/images/pic/201312051500.jpg"
         n = datetime.now()
         if n.month < 10:
             month = "0%s"%n.month
@@ -232,8 +231,9 @@ class weixin(tornado.web.RequestHandler):
         else:
             hour = n.hour-1
         url = "http://www.semc.gov.cn/aqi/home/images/pic/%s%s%s%s00.jpg"%(n.year,month,day,hour)
-        print 'shanghai air pic:',url
-        return url
+        #print 'shanghai air pic:',url
+        #return url
+        return "http://www.semc.gov.cn/aqi/home/images/landscape.jpg"
         
         
             
