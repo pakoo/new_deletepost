@@ -228,9 +228,9 @@ class weixin(tornado.web.RequestHandler):
         else:
             day = n.day
         if n.hour < 10:
-            hour = "0%s"%n.hour
+            hour = "0%s"%(n.hour-1)
         else:
-            hour = n.hour
+            hour = n.hour-1
         url = "http://www.semc.gov.cn/aqi/home/images/pic/%s%s%s%s00.jpg"%(n.year,month,day,hour)
         print 'shanghai air pic:',url
         return url
