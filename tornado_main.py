@@ -38,6 +38,7 @@ def main():
     tornado_app = tornado.web.Application(default_host="oucena\.com",
       handlers=[
     	(r"/", app.weixin),
+    	(r"/airpic", app.AirPic),
     	(r"/static/(.*)", tornado.web.StaticFileHandler, {"path": "./static"}),
     	    ])
 

@@ -52,6 +52,15 @@ item_tmp = """
     </item>
            """
 
+air_tmp = """
+<html>
+<title>test</title>
+<body>
+<p><a href="weixin://profile/gh_6d72fcf71ac6">美领馆PM2.5查询</a></p>
+<p><img src="http://www.semc.gov.cn/aqi/home/images/landscape.jpg"></p>
+</body>
+</html>
+"""
 
 def get_pm(place):
     res = db.find_one({'location':place},sort=[('create_time',DESCENDING)])    
@@ -176,7 +185,7 @@ class weixin(tornado.web.RequestHandler):
                 ctime = str(res['publish_time'])
                 place = '成都'
             elif self.wxtext == '5':
-                items = [('title1','description1','http://oucena.com/static/img/bt.jpg','http://oucena.com/')]  
+                items = [('title1','description1','http://oucena.com/static/img/bt.jpg','http://oucena.com/airpic')]  
                 self.send_news(items)
             else:
                 a = """发送 “1”查询上海 美国领事馆发布的 pm2.5 数据
@@ -236,6 +245,10 @@ class weixin(tornado.web.RequestHandler):
         return "http://www.semc.gov.cn/aqi/home/images/landscape.jpg"
         
         
+class AirPic(tornado.web.RequestHandler):
+
+    def get(self):
+        self.finish(air_imp)
             
 class towww(tornado.web.RequestHandler):
 
