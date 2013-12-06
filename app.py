@@ -248,7 +248,7 @@ class weixin(tornado.web.RequestHandler):
 class AirPic(tornado.web.RequestHandler):
 
     def get(self):
-        self.finish(air_imp)
+        self.finish(air_tmp)
             
 class towww(tornado.web.RequestHandler):
 
