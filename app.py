@@ -54,10 +54,12 @@ item_tmp = """
 
 air_tmp = """
 <html>
-<title>test</title>
+<title>上海pm2.5指数为:%s</title>
 <body>
-<p><a href="weixin://profile/gh_6d72fcf71ac6">美领馆PM2.5查询</a></p>
-<p><img src="http://www.semc.gov.cn/aqi/home/images/landscape.jpg"></p>
+<h1>图片为上海现在外滩空气状况</h1>
+<p>消息来自微信公共号:美领馆pm2.5查询</p>
+<img src = "http://www.semc.gov.cn/aqi/home/images/landscape.jpg" width="100%%" >
+<h2>可按右上角按钮分享到朋友圈</h2>
 </body>
 </html>
 """
@@ -185,7 +187,7 @@ class weixin(tornado.web.RequestHandler):
                 ctime = str(res['publish_time'])
                 place = '成都'
             elif self.wxtext == '5':
-                items = [('title1','description1','http://oucena.com/static/img/bt.jpg','http://oucena.com/airpic')]  
+                items = [('title1','description1','http://oucena.com/static/img/bt.jpg','http://oucena.com/airpic?pm25=18')]  
                 self.send_news(items)
             else:
                 a = """发送 “1”查询上海 美国领事馆发布的 pm2.5 数据
@@ -222,7 +224,8 @@ class weixin(tornado.web.RequestHandler):
 
     def send_air_pic(self,pm25,msg):
         pic_url = self.get_shanghai_air_pic()
-        items = [('上海PM2.5浓度为:%s'%pm25,msg,pic_url,pic_url)]  
+        items = [('上海PM2.5浓度为:%s'%pm25,msg,pic_url,"http://oucena.com/airpic?pm25=%s"%pm25)]  
+        #items = [('上海PM2.5浓度为:%s'%pm25,msg,pic_url,pic_url)]  
         self.send_news(items)
 
     def get_shanghai_air_pic(self):
@@ -248,7 +251,9 @@ class weixin(tornado.web.RequestHandler):
 class AirPic(tornado.web.RequestHandler):
 
     def get(self):
-        self.finish(air_tmp)
+	pm25 = self.get_argument("pm25")
+	print 'pm25:',pm25
+        self.finish(air_tmp%pm25)
             
 class towww(tornado.web.RequestHandler):
 
