@@ -241,6 +241,8 @@ class weixin(tornado.web.RequestHandler):
                 items = [
     ('title1','description1','http://oucena.com/static/img/bt.jpg','http://oucena.com/airpic?pm25=18'),
     ('title1','description1','http://oucena.com/static/img/bt.jpg','http://oucena.com/airpic?pm25=18'),
+    ('title1','description1','http://oucena.com/static/img/bt.jpg','http://oucena.com/airpic?pm25=18'),
+    ('title1','description1','http://oucena.com/static/img/bt.jpg','http://oucena.com/airpic?pm25=18'),
                         ]  
                 self.send_news(items)
 
