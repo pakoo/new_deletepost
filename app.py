@@ -18,6 +18,14 @@ con = MongoClient('localhost',27017)
 db = con.air.pm
 goo = con.x
 
+def get_access_token(appid,appsecret):
+    """
+    获取app access token
+    """
+    token_url = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=%s&secret=%s"%(appid,    appsecret)
+    access_token = json.loads(requests.get(token_url).text)['access_token']
+    return access_token
+
 text_tmp = """
 <xml>
     <ToUserName><![CDATA[%s]]></ToUserName>
@@ -62,6 +70,18 @@ air_tmp = """
 <h2>可按右上角按钮分享到朋友圈</h2>
 </body>
 </html>
+"""
+
+img_tmp="""
+<xml>
+<ToUserName><![CDATA[%s]]></ToUserName>
+<FromUserName><![CDATA[%s]]></FromUserName>
+<CreateTime>%s</CreateTime>
+<MsgType><![CDATA[image]]></MsgType>
+<Image>
+<MediaId><![CDATA[%s]]></MediaId>
+</Image>
+</xml>
 """
 
 def get_pm(place):
@@ -209,7 +229,7 @@ class weixin(tornado.web.RequestHandler):
         elif self.msgtype == 'image':
             self.send_text('我收到你消息啦!!')
         elif self.msgtype == 'event':
-            self.send_text('event!!')
+            self.send_img('10000005')
 
     def send_text(self,msg):
         #self.set_header("Content-Type","application/xml; charset=UTF-8")
@@ -230,6 +250,14 @@ class weixin(tornado.web.RequestHandler):
         items = [('上海PM2.5浓度为:%s'%pm25,msg,pic_url,"http://oucena.com/airpic?pm25=%s"%pm25)]  
         #items = [('上海PM2.5浓度为:%s'%pm25,msg,pic_url,pic_url)]  
         self.send_news(items)
+
+    def send_pic(self,imgid):
+        """
+        发送图片
+        """
+        res = img_tmp%(self.userid,self.myid,int(time.time()),imgid)
+        self.finish()
+
 
     def get_shanghai_air_pic(self):
         n = datetime.now()
