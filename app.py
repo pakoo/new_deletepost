@@ -240,7 +240,7 @@ class weixin(tornado.web.RequestHandler):
             elif self.event_key == 'products':
                 items = [
     ('title1','description1','http://oucena.com/static/img/bt.jpg','http://oucena.com/airpic?pm25=18'),
-    (u'二通插装阀',u'二通插装阀','https://mp.weixin.qq.com/cgi-bin/getimgdata?token=2103208906&msgid={msgid}&mode=large&source=file&fileId=10013043&ow=-1','http://mp.weixin.qq.com/mp/appmsg/show?__biz=MjM5NDAxOTk5OQ==&appmsgid=10013044&itemidx=1&sign=99723752c60ccecbae35df500d214b0b'),
+    (u'二通插装阀',u'二通插装阀','http://mmbiz.qpic.cn/mmbiz/Qhd1mSib1dTPGtZwGfJwSHY50MFDpzMEALnAp6HsRo3ias1eOKOW9CVwJ5rA7S9BOSCpulQFjmViaiacXJa9eg0SOA/0','http://mp.weixin.qq.com/mp/appmsg/show?__biz=MjM5NDAxOTk5OQ==&appmsgid=10013044&itemidx=1&sign=99723752c60ccecbae35df500d214b0b'),
     ('title1','description1','http://oucena.com/static/img/bt.jpg','http://oucena.com/airpic?pm25=18'),
     ('title1','description1','http://oucena.com/static/img/bt.jpg','http://oucena.com/airpic?pm25=18'),
                         ]  
