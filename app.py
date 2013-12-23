@@ -130,7 +130,8 @@ class weixin(tornado.web.RequestHandler):
 
     def prepare(self):
         print '\n\n>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>'
-        print 'body:',self.request
+        print 'request:',self.request
+        print 'body:',self.request.body
         print '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>'
         if self.request.method == 'POST':
             soup = BeautifulSoup(self.request.body)
@@ -291,7 +292,7 @@ class Application(tornado.web.Application):
 if __name__ == '__main__':
     pass
     http_server = tornado.httpserver.HTTPServer(request_callback=Application())
-    http_server.listen(8888)
+    http_server.listen(80)
     tornado.ioloop.IOLoop.instance().start()
 
     #print get_all_item()[0]

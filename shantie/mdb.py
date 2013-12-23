@@ -406,6 +406,19 @@ def check_login(username,password):
     if res:
         return res['_id']
 
+def check_crawler(ip):
+    """
+    """
+    res = tieba.userip.find_one({'ip':ip})
+    if res:
+        tieba.userip.update({'ip':ip},{'$inc':{'count':1}})
+    else:
+        tieba.userip.insert({'ip':ip,'count':1})
+    return res
+        
+
+
+
 
 if __name__ == "__main__":
     pass
