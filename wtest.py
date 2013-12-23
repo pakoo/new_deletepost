@@ -71,7 +71,7 @@ menu = {"button":[
 
 
 data = """
--d '{"button": [{"name": "关于我们", "sub_button": [{"type": "click", "name": "简介", "key": "about"}, {"url": "http://www.hanfook.com.cn/", "type": "view", "name": "公司首页"}]}, {"type": "click", "name": "产品列表", "key": "products"}, {"name": "其他", "sub_button": [{"url": "http://www.hanfook.com.cn/news/?class_id=1", "type": "view", "name": "新闻动态"}, {"url": "http://www.hanfook.com.cn/feedback/", "type": "view", "name": "在线留言"}, {"url": "http://www.hanfook.com.cn/news/?class_id=2", "type": "view", "name": "技术支持"}, {"url": "http://www.hanfook.com.cn/html_info/job-5.html", "type": "view", "name": "招贤纳士"}]}]}'
+-d '{"button": [{"name": "关于我们", "sub_button": [{"type": "click", "name": "简介", "key": "about"}, {"url": "http://www.hanfook.com.cn/", "type": "view", "name": "公司首页"}]}, {"type": "click", "name": "产品列表", "key": "products"}, {"name": "其他", "sub_button": [{"url": "http://www.hanfook.com.cn/news/?class_id=1", "type": "view", "name": "新闻动态"}, {"url": "http://www.hanfook.com.cn/feedback/", "type": "view", "name": "在线留言"}, {"url": "http://www.hanfook.com.cn/news/?class_id=2", "type": "view", "name": "技术支持"}, {"url": "http://www.hanfook.com.cn/html_info/job-5.html", "type": "view", "name": "招贤纳士"}, {"key":"findme", "type": "click", "name": "联系方式"}]}]}'
 """
 url = 'curl https://api.weixin.qq.com/cgi-bin/menu/create\?access_token\=%s '%get_access_token(appid,appsecret)
 
