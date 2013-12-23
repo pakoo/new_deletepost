@@ -229,7 +229,7 @@ class weixin(tornado.web.RequestHandler):
         elif self.msgtype == 'image':
             self.send_text('我收到你消息啦!!')
         elif self.msgtype == 'event':
-            self.send_img('10000005')
+            self.send_pic('10000005')
 
     def send_text(self,msg):
         #self.set_header("Content-Type","application/xml; charset=UTF-8")
