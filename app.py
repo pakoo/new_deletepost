@@ -291,7 +291,7 @@ class Application(tornado.web.Application):
 if __name__ == '__main__':
     pass
     http_server = tornado.httpserver.HTTPServer(request_callback=Application())
-    http_server.listen(80)
+    http_server.listen(8888)
     tornado.ioloop.IOLoop.instance().start()
 
     #print get_all_item()[0]
