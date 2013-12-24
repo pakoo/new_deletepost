@@ -236,7 +236,9 @@ class weixin(tornado.web.RequestHandler):
         elif self.msgtype == 'event':
             print 'eventkey:',self.event_key
             if self.event_key == 'about':
-                self.send_text(u"""天津瀚福精密液压技术有限公司坐落于渤海明珠天津海河科技园，聚集了多位热爱液压行业，专注于液压技术创新，以发展提升民族液压水平为使命的行业资深人士共同创立，自创品牌 HANFOOK 瀚福液压。 瀚，寓意液压广泛的应用领域和瀚福人追求更宽广、博大的幸福的胸怀；  福，寓意来自中国的民族液压品牌，和体现瀚福人为公司及社会创造价值和福祉的企业文化。瀚福液压旨在为客户产品增值、节能，与供应链共同降本、增效，通过技术创新、无限服务、应需而变、紧密合作实现多赢共赢。致力于液压系统的高度集成与方案优化，为液压领域提供全方位的解决方案是我们的企业目标与追求；共福共赢，成就你我，成为液压技术世界领先品牌是瀚福液压的企业梦想和愿景。""")
+                items = [(u'天津瀚福精密液压技术有限公司简介',u'天津瀚福精密液压技术有限公司坐落于渤海明珠天津海河科技园，聚集了多位热爱液压行业，专注于液压技术创新，以发展提升民族液压水平为使命的行业资深人士共同创立，自创品牌 HANFOOK 瀚福液压。','http://mmbiz.qpic.cn/mmbiz/Qhd1mSib1dTPMibjnepxoNYic8nZNZIibJVpYQa7UF8oe8OguJB4iaXfCwQXN2feSIdL09DxOG8diaIeYQhYrR0EJicag/0','http://mp.weixin.qq.com/mp/appmsg/show?__biz=MjM5NDAxOTk5OQ==&appmsgid=10013066&itemidx=1&sign=c5ea293cf7b1a58e6ccae9546e85a0c8#wechat_redirect')]  
+                self.send_news(items)
+                #self.send_text(u"""天津瀚福精密液压技术有限公司坐落于渤海明珠天津海河科技园，聚集了多位热爱液压行业，专注于液压技术创新，以发展提升民族液压水平为使命的行业资深人士共同创立，自创品牌 HANFOOK 瀚福液压。 瀚，寓意液压广泛的应用领域和瀚福人追求更宽广、博大的幸福的胸怀；  福，寓意来自中国的民族液压品牌，和体现瀚福人为公司及社会创造价值和福祉的企业文化。瀚福液压旨在为客户产品增值、节能，与供应链共同降本、增效，通过技术创新、无限服务、应需而变、紧密合作实现多赢共赢。致力于液压系统的高度集成与方案优化，为液压领域提供全方位的解决方案是我们的企业目标与追求；共福共赢，成就你我，成为液压技术世界领先品牌是瀚福液压的企业梦想和愿景。""")
             if self.event_key == 'findme':
                 self.send_text(u"""地 址：天津市津南区海河科技园聚兴道6号
 邮 编：300350
@@ -247,7 +249,7 @@ E-mail：hanfook@hanfook.com.cn
                         """)
             elif self.event_key == 'products':
                 items = [
-                        (u'产品中心',u'产品中心',u'http://mmbiz.qpic.cn/mmbiz/Qhd1mSib1dTPGtZwGfJwSHY50MFDpzMEA26Ap7ZrVoXkiaJPXHsFqhVtdNDZ1yO0t16SQF2TNMEWhcoVu9BzzBxA/0','http://mmbiz.qpic.cn/mmbiz/Qhd1mSib1dTPGtZwGfJwSHY50MFDpzMEA26Ap7ZrVoXkiaJPXHsFqhVtdNDZ1yO0t16SQF2TNMEWhcoVu9BzzBxA/0'),
+                        (u'产品中心',u'产品中心',u'http://mmbiz.qpic.cn/mmbiz/Qhd1mSib1dTPMibjnepxoNYic8nZNZIibJVpYQa7UF8oe8OguJB4iaXfCwQXN2feSIdL09DxOG8diaIeYQhYrR0EJicag/0','http://mmbiz.qpic.cn/mmbiz/Qhd1mSib1dTPGtZwGfJwSHY50MFDpzMEA26Ap7ZrVoXkiaJPXHsFqhVtdNDZ1yO0t16SQF2TNMEWhcoVu9BzzBxA/0'),
     (u'二通插装阀',u'二通插装阀','http://mmbiz.qpic.cn/mmbiz/Qhd1mSib1dTPGtZwGfJwSHY50MFDpzMEALnAp6HsRo3ias1eOKOW9CVwJ5rA7S9BOSCpulQFjmViaiacXJa9eg0SOA/0','http://mp.weixin.qq.com/mp/appmsg/show?__biz=MjM5NDAxOTk5OQ==&appmsgid=10013044&itemidx=1&sign=99723752c60ccecbae35df500d214b0b'),
     (u'方向控制阀',u'方向控制阀','http://mmbiz.qpic.cn/mmbiz/Qhd1mSib1dTPGtZwGfJwSHY50MFDpzMEAsfK9JXMspoib3WQX1I7OMbWTqLC28X2ac7p8yPo6GcU5VBsu6UyQMog/0','http://mp.weixin.qq.com/mp/appmsg/show?__biz=MjM5NDAxOTk5OQ==&appmsgid=10013047&itemidx=1&sign=2066b954dac85a363e9a761d540966b5#wechat_redirect'),
     (u'叠加阀',u'叠加阀','http://mmbiz.qpic.cn/mmbiz/Qhd1mSib1dTPGtZwGfJwSHY50MFDpzMEAAFRicS1NfXQUIUQ3WXAicuDSaVS3TEl4KYVqBrtAZtfgWRx9zatd85Og/0','http://mp.weixin.qq.com/mp/appmsg/show?__biz=MjM5NDAxOTk5OQ==&appmsgid=10013049&itemidx=1&sign=5f7130560546d79a760208ad36ab1925#wechat_redirect'),
