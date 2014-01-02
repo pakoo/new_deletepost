@@ -180,6 +180,7 @@ def reply_img_insert(db_name='tieba',sort_name='liyi',img_url='',post_url=''):
                 'create_time':int(time.time()),
                 'last_click_time':int(time.time()),
                 'click':0,
+                'is_open':1,
     }
     if url and img_is_exist is None:
         print ">>>>>>>>>>>>>>>>>>>>发现一张(%s)新图 %s，插入了数据库<<<<<<<<<<<<<<<<<<"%(db_name,url)

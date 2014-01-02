@@ -21,7 +21,7 @@ tieba=con.tieba
 db_web = con.web
 #db_post=kds.post
 #db_fs=gridfs.GridFS(kds,'postfile')
-debug_flag = 1
+debug_flag = 0
 ######################db.init######################
 def transUinxtime2Strtime(utime,type=0):
 #    stime=time.strftime("%a, %d %b",time.localtime(utime))
@@ -338,7 +338,7 @@ def get_tu(page=1,bar_name='jietup',count=24):
     """
     获取图吧图片
     """
-    img_url_list = con['tieba'].img.find({'type_name':bar_name},limit=count,skip=(page-1)*count,sort=[('last_click_time',DESCENDING)])
+    img_url_list = con['tieba'].img.find({'type_name':bar_name,'is_open':1},limit=count,skip=(page-1)*count,sort=[('last_click_time',DESCENDING)])
     if img_url_list.count()>0:
         return img_url_list
 
@@ -360,7 +360,13 @@ def delete_tu(url):
     """
     删除图片
     """
-    con['tieba'].img.remove({'url':url})
+    con['tieba'].img.update({'url':url},{'$set':{'is_open':-1}})
+
+def hide_tu(url):
+    """
+    隐藏图片
+    """
+    con['tieba'].img.update({'url':url},{'$set':{'is_open':9}})
     
 
 if __name__ == "__main__":

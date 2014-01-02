@@ -125,7 +125,7 @@ $(document).ready(function(){
   $(".hidepost").click(function () { 
     var url = $(this).attr("id");
     $(this).parent().parent().slideUp("slow", function () {
-        var jqxhr = $.post("/tieba/hide",{ "url":url}, function(data) {
+        var jqxhr = $.post("/tu/hide",{ "url":url}, function(data) {
          });
     });
   });
