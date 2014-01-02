@@ -29,6 +29,20 @@ def get_pm(place):
     if res:
         return res
 
+def get_level(data):
+    if 0<= data <=50:
+        return "空气状况:优"
+    elif 51<= data <=100: 
+        return "空气状况:良"
+    elif 101<= data <=150: 
+        return "空气状况:轻度污染,建议佩戴口罩"
+    elif 151<= data <=200: 
+        return "空气状况:中度污染,建议佩戴口罩"
+    elif 201<= data <=300: 
+        return "空气状况:重度污染,建议不外出"
+    else:
+        return "空气状况:严重污染,建议不外出"
+
 class  weixin(tornado.web.RequestHandler):
 
     def prepare(self):
@@ -92,8 +106,8 @@ class  weixin(tornado.web.RequestHandler):
                     """
                 self.send_text(a)    
                 return 
-                
-            self.send_text("%s %s PM2.5:%s   "%(ctime,place,pm25))    
+            air_level =get_level(int(pm25))  
+            self.send_text("%s %s PM2.5:%s  %s "%(ctime,place,pm25,air_level))    
         elif self.msgtype == 'location':
             self.send_text('我收到你消息啦!!')
         elif self.msgtype == 'image':
