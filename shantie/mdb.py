@@ -7,6 +7,7 @@ some db interface
 """
 import pymongo
 from pymongo import ASCENDING,DESCENDING
+from bson.objectid import ObjectId as monid
 import gridfs
 import time
 import os
@@ -354,6 +355,12 @@ def exist_post(url):
     """
     if con['tieba'].post.find_one({'url':int(url)}):
         return True
+
+def delete_tu(url):
+    """
+    删除图片
+    """
+    con['tieba'].img.remove({'url':url})
     
 
 if __name__ == "__main__":
@@ -369,3 +376,4 @@ if __name__ == "__main__":
     #add_advice('test','admin')
     #print get_advice()
     #get_tu()
+    delete_tu('52c564201d41c87a14000000')

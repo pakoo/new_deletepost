@@ -1,14 +1,14 @@
 ﻿{% extends "base.html" %}
 
 
-{% block title %}{{group_name|default:'后台'}}管理{% endblock %}
+{% block title %}{{group_name|default:'后台'}}图吧图片管理{% endblock %}
 
 {% block navbar %}
-    <li class = "{{admin|default:""}}"><a href="/tieba/manage/1">贴吧</a></li> 
     <li class = "{{liuyan|default:""}}"><a href="/liuyan">留言列表</a></li> 
+    <li class = "{{admin|default:""}}"><a href="/tieba/manage/1">贴吧</a></li> 
     <li class = "{{hot|default:""}}"><a href="/tieba/hot/1">最热</a></li> 
     <li class = "{{filter|default:""}}"><a href="/filter/1">福利</a></li> 
-    <li class = "{{manage_tu|default:""}}"><a href="/tu/manage/1">福利图管理</a></li> 
+    <li class = "{{tu_manage|default:""}}"><a href="/tu/manage/1">福利图管理</a></li> 
 {% endblock %}
 
 {% block content %}
@@ -26,23 +26,27 @@
     <table class="table">
     <thead>
       <tr>
-        <th>标题</th>
-        <th>作者</th>
-        <th>发现时间</th>      
+        <th>图片</th>
+        <th>吧名</th>
+        <th>帖子</th>      
         <th>点击数</th>        
         <th>隐藏</th>                
         <th>删除</th>                
       </tr>
     </thead>
     <tbody>
-        {% for post in posts %}
+        {% for img in img_list %}
             <tr>
-            <td><a href="{{post.0}}" target="_blank">{{post.1}}</a></td>
-            <td>{{post.3}}</td>
-            <td class="muted">{{post.2}}</td>
-            <td>{{post.5}}</td>               
-            <td><button href="#" class="btn btn-warning hidepost" id="{{post.0}}">隐藏</button></td>            
-            <td><button href="#" class="btn btn-danger remove" id="{{post.0}}">删除</button></td>            
+            <td>
+                <a href="/tieba/post/{{img.post_url}}" class="thumbnail" >
+                    <img src="http://imgsrc.baidu.com/forum/pic/item/{{ img.url }}" name = "/tieba/post/{{ img.post_url }}" alt="11" width="400" height="300">
+                </a>
+            </td>
+            <td>{{img.type_name}}</td>
+            <td >{{img.post_url}}</td>
+            <td>{{img.click}}</td>               
+            <td><button href="#" class="btn btn-warning hidepost" id="{{img.url}}">隐藏</button></td>            
+            <td><button href="#" class="btn btn-danger remove" id="{{img.url}}">删除</button></td>            
             </tr>
         {% endfor %}
 
@@ -82,6 +86,25 @@
 {% endblock %}
      
 {% block script %}
+<script type="text/javascript">
+    //破防盗链js
+    function ImgRebuild() {
+    $(".thumbnail img").each(function(i){
+        url = this.src;
+        width = this.width;
+        height = this.height;
+        var imgid = Math.random();
+        var post_url = this.name;
+        frameid = 'frameimg' + imgid;
+        window['img'+imgid] = '<a href="'+url+'?kilobug" target="_blank" ><img id="img" height="300px" width="350px" src="'+url+'?kilobuga" /></a><script>window.onload = function() { parent.document.getElementById(\''+frameid+'\').height = "300" width="600px"; }<'+'/script>';
+        //img_r = '<iframe id="'+frameid+'" src="javascript:parent[\'img'+imgid+'\'];" frameBorder="0" height="' +height+ '" scrolling="no" width="100%"></iframe>';
+        img_r = '<iframe id="'+frameid+'" src="javascript:parent[\'img'+imgid+'\'];" frameBorder="0" height="300px" width="400px" scrolling="no" ></iframe>';
+        $(this).replaceWith(img_r);
+            });
+        return '';
+    }
+    ImgRebuild();
+</script>
 <script>
 $(document).ready(function(){
   //alert($("#1").parent().html())
@@ -93,7 +116,7 @@ $(document).ready(function(){
         //$.post("/xkds/remove", { "url":url} );
         //var jqxhr = $.post("/xkds/remove",{ "url":url});
         //alert('com');
-        var jqxhr = $.post("/tieba/remove",{ "url":url}, function(data) {
+        var jqxhr = $.post("/tu/remove",{ "url":url}, function(data) {
            //alert("删除结果: " + data);
          });
     });

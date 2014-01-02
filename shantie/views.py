@@ -233,7 +233,7 @@ def tieba_backend(request,page):
     else:
         post_data['frontpage']=None
     post_data['nextpage']=nextpage
-    post_data['liyi']='active'
+    post_data['admin']='active'
         
     return render('manage.html',post_data)
 
@@ -563,5 +563,29 @@ def write_reply(request):
     else:
         return  HttpResponse('添加失败')
         
-            
+@csrf_exempt    
+def remove_tu(request):
+    """
+    删除图片
+    """
+    print '================>>>>>>>>>>>>remove_tu'
+    user_session =request.session 
+    print 'user_session is_login:',user_session.get('is_login',0)
+    if user_session.get('is_login',0) != 1: 
+        return HttpResponse('不要做坏事哦!')
+    post_url = request.POST['url']
+    print 'post_url:',post_url
+    if post_url:
+        res=mdb.delete_tu(post_url)
+        print 'res:',res
+    return HttpResponse(res)
 
+def tu_manage(request,page=1):
+    """
+    图片列表
+    """
+    page = int(page)
+    img_list = []
+    img_list = mdb.get_tu(page,'jietup',30)
+    print img_list
+    return render('tu_manage.html',{'img_list':img_list,'manage_tu':'active','frontpage':page-1,'nextpage':page+1})
