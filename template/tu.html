@@ -16,7 +16,7 @@
 <div class="row">
         {% for img in img_list %}
             <li class="span4">
-                <a href="/tieba/post/2075484146" class="thumbnail" >
+                <a href="/tieba/post/{{img.post_url}}" class="thumbnail" >
                     <img src="http://imgsrc.baidu.com/forum/pic/item/{{ img.url }}" name = "/tieba/post/{{ img.post_url }}" alt="11" width="400" height="300">
                 </a>
             </li>
@@ -53,7 +53,7 @@
         var imgid = Math.random();
         var post_url = this.name;
         frameid = 'frameimg' + imgid;
-        window['img'+imgid] = '<a href="'+post_url+'" target="_blank" ><img id="img" height="300px" width="350px" src="'+url+'?kilobuga" /></a><script>window.onload = function() { parent.document.getElementById(\''+frameid+'\').height = "300" width="400px"; }<'+'/script>';
+        window['img'+imgid] = '<a href="'+url+'?kilobug" target="_blank" ><img id="img" height="300px" width="350px" src="'+url+'?kilobuga" /></a><script>window.onload = function() { parent.document.getElementById(\''+frameid+'\').height = "300" width="400px"; }<'+'/script>';
         //img_r = '<iframe id="'+frameid+'" src="javascript:parent[\'img'+imgid+'\'];" frameBorder="0" height="' +height+ '" scrolling="no" width="100%"></iframe>';
         img_r = '<iframe id="'+frameid+'" src="javascript:parent[\'img'+imgid+'\'];" frameBorder="0" height="300px" width="400px" scrolling="no" ></iframe>';
         $(this).replaceWith(img_r);
