@@ -14,6 +14,7 @@ from django.views.decorators.csrf import csrf_exempt,csrf_protect
 from django.core.signals import request_finished
 from django.dispatch import receiver
 import random
+import time
 
 #pv=0
 #@receiver(request_finished)
@@ -321,6 +322,10 @@ def get_tieba_post(request,post_url):
     """
     返回帖子内容
     """
+    user_session =request.session 
+    print user_session.keys()
+    print 'user_session is_login:',user_session.get('is_login',0)
+    print 'user_sessionid:',user_session.session_key
     print "post_url:",post_url
     reply_info=get_tieba_post_reply(int(post_url),'tieba',mdb.debug_flag)
     hot_post = mdb.get_hot_post('tieba')
@@ -476,8 +481,8 @@ def send_advice(request):
     ip = request.META['REMOTE_ADDR']
     print 'ip:',ip
     print 'POST:',request.POST
-    nick_name = request.POST.get('nickname','')
-    content = request.POST.get('advice','')
+    nick_name = request.POST.get('nickname','') 
+    content = request.POST.get('advice','') 
     if len(nick_name) > 20 or len(content) >140:
         return HttpResponse('留言字数过多,最多140字!')
     else:
@@ -523,5 +528,40 @@ def tu(request,page=1):
     print img_list
     return render('tu.html',{'img_list':img_list,'frontpage':page-1,'nextpage':page+1})
 
+@csrf_exempt    
+def write_reply(request):
+    """
+    发表评论
+    """
+    url = request.META['HTTP_REFERER'].split('/')[-1]
+    user_session =request.session 
+    print 'user_session is_login:',user_session.get('is_login',0)
+    print 'user_sessionid:',user_session.get('sessionid',0)
+    print 'url :',url
+    if user_session.get('last_reply_time',None):
+        last_reply_time = int(user_session.get('last_reply_time'))
+        print 'last_reply_time:',last_reply_time
+        if time.time()-last_reply_time <= 30:
+            return  HttpResponse('评论间隔太多请等30秒后再提交评论!!')
+    text = request.POST.get('text','')
+    print 'text:',text
+    if text:
+        if len(text) >300:
+            return  HttpResponse('字数太多超过300字了!!')
 
+        else:
+            reply_info = {
+                'content':text,
+                'user_id':-1,
+                'create_time':int(time.time()),
+                'user_name':'404网友',
+                'session_key':getattr(user_session,'session_key',''),
+            } 
+            mdb.add_new_reply(int(url),reply_info)
+            user_session['last_reply_time'] = int(time.time())
+        return  HttpResponseRedirect('/tieba/post/%s'%url)
+    else:
+        return  HttpResponse('添加失败')
+        
+            
 

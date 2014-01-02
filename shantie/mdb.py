@@ -185,6 +185,13 @@ def get_tieba_post_reply(url,dbname,is_open=0):
                     reply['create_time'] = transUinxtime2Strtime(reply['create_time'])
                 reply['floor'] = fcount
                 fcount +=1
+            if res.get('user_reply',None):
+                for reply in res['user_reply']:
+                    #print 'reply:',reply
+                    if dbname == 'tieba':
+                        reply['create_time'] = transUinxtime2Strtime(reply['create_time'])
+                    reply['floor'] = fcount
+                    fcount +=1
         return res
     
 
@@ -330,11 +337,19 @@ def get_tu(page=1,bar_name='liyi'):
     """
     获取图吧图片
     """
-    img_url_list = con['tieba'].img.find({'type_name':bar_name},limit=30,skip=(page-1)*30,sort=[('create_time',DESCENDING)])
+    img_url_list = con['tieba'].img.find({'type_name':bar_name},limit=30,skip=(page-1)*30,sort=[('last_click_time',DESCENDING)])
     if img_url_list.count()>0:
         return img_url_list
 
 
+def add_new_reply(url,content):
+    """
+    添加一条新评论
+    """
+    con['tieba'].post.update({'url':url},{'$push':{'user_reply':content}})
+
+
+    
 
 if __name__ == "__main__":
     pass
@@ -348,4 +363,4 @@ if __name__ == "__main__":
     #print user_login('gan','123456')
     #add_advice('test','admin')
     #print get_advice()
-    get_tu()
+    #get_tu()

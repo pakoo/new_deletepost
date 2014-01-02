@@ -33,6 +33,7 @@ urlpatterns = patterns('',
      url(r'^tieba/remove$', 'shantie.views.remove_tieba_post'),
      url(r'^tieba/hide$', 'shantie.views.hide_post'),
      url(r'^tieba/hot/(?P<page>\d+)', 'shantie.views.tieba_today_hot'),
+     url(r'^writereply$', 'shantie.views.write_reply'),
 
 
      url(r'^search/(?P<keyword>\w+)/(?P<page>\d+)', 'shantie.views.search_post'),

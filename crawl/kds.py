@@ -539,6 +539,7 @@ if __name__ == "__main__":
             get_tieba_post("liyi")
             #get_tieba_post("wow")
             #get_tieba_post("meinv")
+            #get_tieba_post("jietuo")
             #get_kds_post()
         except Exception,e:
             print('\n'*9)
