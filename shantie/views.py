@@ -516,11 +516,12 @@ def tu(request,page=1):
     """
     #pic_url = '71cf3bc79f3df8dc7fa3ae06cd11728b4610288e.jpg.jpg'
     #return render('tu.html',{'src':'http://imgsrc.baidu.com/forum/pic/item/'+pic_url})
+    page = int(page)
     img_list = []
-    img_list = mdb.get_tu(int(page),'liyi')
+    img_list = mdb.get_tu(page,'liyi')
     #img_list = [{'post_url':a['post_url'],'url':a['url']} for a in img_list]
     print img_list
-    return render('tu.html',{'img_list':img_list})
+    return render('tu.html',{'img_list':img_list,'frontpage':page-1,'nextpage':page+1})
 
 
 
