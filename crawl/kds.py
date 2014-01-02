@@ -177,6 +177,7 @@ def reply_img_insert(db_name='tieba',sort_name='liyi',img_url='',post_url=''):
                 'url':url,
                 'post_url':post_url,
                 'create_time':int(time.time()),
+                'last_click_time':int(time.time()),
                 'click':0,
     }
     if url and img_is_exist is None:
@@ -482,9 +483,9 @@ def get_tieba_reply(post_soup,sort_name,post_url,page=1):
                 for img in reply_content_img_list:
                     #print 'img src:',img['src']
                     reply_img_insert('tieba',sort_name,img['src'],post_url)
-            else:
-                for img in reply_content_img_list:
-                    reply_img_insert('tieba',sort_name,img['src'],post_url)
+            #else:
+            #    for img in reply_content_img_list:
+            #        reply_img_insert('tieba',sort_name,img['src'],post_url)
 
         
         content = str(d_post_content)
