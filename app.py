@@ -106,7 +106,7 @@ class  weixin(tornado.web.RequestHandler):
                     """
                 self.send_text(a)    
                 return 
-            air_level =get_level(int(pm25))  
+            air_level =get_level(int(float(pm25)))  
             self.send_text("%s %s PM2.5:%s  %s "%(ctime,place,pm25,air_level))    
         elif self.msgtype == 'location':
             self.send_text('我收到你消息啦!!')
