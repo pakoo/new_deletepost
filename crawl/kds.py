@@ -22,6 +22,7 @@ import os
 import os.path
 from pymongo import ASCENDING,DESCENDING
 import requests
+from urlparse import urlparse
 mktime=lambda dt:time.mktime(dt.utctimetuple())
 ######################db.init######################
 connection = pymongo.Connection('localhost', 27017)
@@ -410,6 +411,98 @@ def get_tieba_post(tieba_name='liyi'):
     else:
         print 'get tieba mainpage html fail'
 
+def get_tieba_post_img(tieba_name='liyi'):
+    """
+    抓取百度贴白有些的帖子地址
+    """
+    url = "http://tieba.baidu.com/f?kw=%s"%tieba_name
+    tieba_url_root = "http://tieba.baidu.com"
+    tieba_html = get_html(url)
+
+    if tieba_html:
+        soup = BeautifulSoup(tieba_html,fromEncoding='gbk')
+        thread_list = soup.find('ul',{'id':'thread_list'})
+        post_list = thread_list.findAll('li',{'class':'j_thread_list'})
+        #print "post_list:",len(post_list)
+        for p in post_list:
+            #print '===================================\n'
+            #print 'row:',p
+            time.sleep(3)
+            div_title = p.find('a',{'class':'j_th_tit'})
+            title_text = div_title.text
+            org_title = title_text.encode('utf-8')
+            filter_title = gfw.replace(org_title)
+            if org_title != filter_title:
+                print 'title_text:',title_text
+                print '>>>>>>>>>>>>>>>>>>>>>>>>>>>发现不和谐帖子!!!!!!!!!!!!!!!!!<<<<<<<<<<<<<<<<<<<<<<<<<<'
+                continue
+            div_author = p.find('div',{'class':'threadlist_author'}).span.a
+            div_reply = p.find('div',{'class':'threadlist_rep_num j_rp_num'})
+            url = div_title['href'][1:]
+            post_url=str(os.path.join(tieba_url_root,url))
+            if div_author is not None:
+                author = div_author.text
+            else:
+                author = 'diaosi'
+            post_info = {
+            'url':int(url[2:]),
+            'title':title_text,
+            'reply':int(div_reply.text),
+            'user_name':author,
+            'user_id':'',
+            'create_time':time.time(),
+            'is_open':1,
+            'content':None,
+            'is_check':0,
+            'click':0,
+            'find_time':time.time(),
+            'tieba_name':tieba_name,
+            }
+            exist_post = tieba.img.find_one({'url':post_info['url']})
+            print 'exist_post:',exist_post
+            if exist_post:
+                print '===================已经下载过次帖子的图片==================='
+                continue
+            post_html = get_html(post_url)
+            if post_html is None:
+                print ">"*150
+                print "下载帖子html失败"
+                print ">"*150
+                continue
+            #reply_list = post_soup.findAll('div',{'class':'p_post'})
+            #print 'reply_len:',len(reply_list)
+            #if len(reply_list) < 1 :
+            if 'closeWindow' in post_html :
+                post_info['is_open'] = 0
+                post_info['find_time'] =int(time.time())
+            else:
+                is_liang = 0
+                post_soup = BeautifulSoup(post_html,fromEncoding='gbk')
+                """
+                获取帖子总页数
+                page_line = post_soup.findAll('li',{'class':'l_pager pager_theme_2'})
+                if page_line:
+                    last_page = int(page_line[0].findAll('a')[-1]['href'].split('=')[-1])
+                    print 'last_page:',last_page
+                else:
+                    last_page =1
+                    print 'just one page this post'
+                """
+                post_info['content'],is_liang1 = get_tieba_reply_img(post_soup,sort_name=tieba_name,post_url = post_info['url'])
+                is_liang = is_liang | is_liang1
+                post_html2 = get_html(post_url+'?pn=2')
+                #下载第二页
+                if post_html2 is not None and 'closeWindow' not in post_html:
+                    post_soup = BeautifulSoup(post_html2,fromEncoding='gbk')
+                    next_content ,is_liang2= get_tieba_reply_img(post_soup,sort_name=tieba_name,post_url = post_info['url'],page=2)
+                    post_html3 = get_html(post_url+'?pn=3')
+                    #下载第三页
+                    if post_html3 is not None and 'closeWindow' not in post_html:
+                        post_soup = BeautifulSoup(post_html3,fromEncoding='gbk')
+                        next_content ,is_liang3= get_tieba_reply_img(post_soup,sort_name=tieba_name,post_url = post_info['url'],page=3)
+    else:
+        print 'get tieba mainpage html fail'
+
 def get_tieba_reply(post_soup,sort_name,post_url,page=1):
     """
     解析帖子内容
@@ -510,6 +603,60 @@ def get_tieba_reply(post_soup,sort_name,post_url,page=1):
         reply_data.append(reply_info)
     return reply_data,is_liang
 
+
+def get_tieba_reply_img(post_soup,sort_name,post_url,page=1):
+    """
+    解析帖子图片
+    """
+    print 'post_url:',post_url
+    db_name = 'tieba'
+    tieba_reply = tieba.reply
+    reply_list_tmp = post_soup.findAll('div',{'class':'p_postlist'})
+    reply_list = []
+    try:
+        reply_list.append(reply_list_tmp[0].find('div',{'class':'l_post noborder'}))
+        reply_list_tmp = reply_list_tmp[0].findAll('div',{'class':'l_post '})
+    except Exception,e:
+        print traceback.print_exc()
+        print '====================================\n'
+        print post_soup
+    for r in reply_list_tmp:
+        reply_list.append(r)
+    rcount = 1
+    reply_data = []
+    author_name = '' 
+    is_liang = 0
+    for reply in reply_list:
+        if reply is None :
+            continue
+        d_post_content = reply.find('div',{'class':'d_post_content'})
+        p_tail = reply['data-field']
+        if p_tail:
+            p_tail = json.loads(p_tail)
+            create_time = transtime(p_tail['content']['date'])
+            user_id = p_tail['author'].get('outer_id',-1)
+            user_name = p_tail['author']['name']
+        else:
+            create_time = tim.time()
+            user_name = ''
+            user_id =-1 
+
+        reply_content_img_list = d_post_content.findAll('img')
+        #print 'reply_content_img_list:',reply_content_img_list
+        if rcount ==1 :
+            author_name = user_name
+
+        if user_name == author_name:
+            #存储楼主的图片url
+            for img in reply_content_img_list:
+                print 'img src:',img['src']
+                hostname = urlparse(img['src']).hostname
+                if hostname != 'imgsrc.baidu.com':
+                    continue
+                reply_img_insert('tieba',sort_name,img['src'],post_url)
+        rcount +=1
+
+    return reply_data,is_liang
 def check_filter_title():
     post_list=tieba.post.find({'is_open':0},limit=50,skip=0,sort=[('find_time',DESCENDING)])
     for p in post_list:
@@ -536,11 +683,12 @@ def get_tieba_info(tieba_name='liyi'):
 if __name__ == "__main__":
     while True:
         try:
-            get_tieba_post("liyi")
+            #get_tieba_post("liyi")
             #get_tieba_post("wow")
             #get_tieba_post("meinv")
             #get_tieba_post("jietuo")
             #get_kds_post()
+            get_tieba_post_img("jietup")
         except Exception,e:
             print('\n'*9)
             traceback.print_exc()

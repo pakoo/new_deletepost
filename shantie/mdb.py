@@ -333,11 +333,11 @@ def get_advice():
     print 'advice_list:',advice_list
     return advice_list 
     
-def get_tu(page=1,bar_name='liyi'):
+def get_tu(page=1,bar_name='jietup',count=24):
     """
     获取图吧图片
     """
-    img_url_list = con['tieba'].img.find({'type_name':bar_name},limit=30,skip=(page-1)*30,sort=[('last_click_time',DESCENDING)])
+    img_url_list = con['tieba'].img.find({'type_name':bar_name},limit=count,skip=(page-1)*count,sort=[('last_click_time',DESCENDING)])
     if img_url_list.count()>0:
         return img_url_list
 
@@ -348,7 +348,12 @@ def add_new_reply(url,content):
     """
     con['tieba'].post.update({'url':url},{'$push':{'user_reply':content}})
 
-
+def exist_post(url):
+    """
+    是否存在这个帖子
+    """
+    if con['tieba'].post.find_one({'url':int(url)}):
+        return True
     
 
 if __name__ == "__main__":
