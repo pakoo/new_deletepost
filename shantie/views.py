@@ -526,7 +526,7 @@ def tu(request,page=1):
     img_list = mdb.get_tu(page,'jietup',24)
     #img_list = [{'post_url':a['post_url'],'url':a['url']} for a in img_list]
     print img_list
-    return render('tu.html',{'img_list':img_list,'frontpage':page-1,'nextpage':page+1})
+    return render('tu.html',{'img_list':img_list,'tu':'active','frontpage':page-1,'nextpage':page+1})
 
 @csrf_exempt    
 def write_reply(request):
