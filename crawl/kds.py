@@ -24,7 +24,7 @@ from pymongo import ASCENDING,DESCENDING
 import requests
 mktime=lambda dt:time.mktime(dt.utctimetuple())
 ######################db.init######################
-connection = pymongo.Connection('404cn.org', 27017)
+connection = pymongo.Connection('localhost', 27017)
 
 kds=connection.kds
 post=kds.post
@@ -482,6 +482,10 @@ def get_tieba_reply(post_soup,sort_name,post_url,page=1):
                 for img in reply_content_img_list:
                     #print 'img src:',img['src']
                     reply_img_insert('tieba',sort_name,img['src'],post_url)
+            else:
+                for img in reply_content_img_list:
+                    reply_img_insert('tieba',sort_name,img['src'],post_url)
+
         
         content = str(d_post_content)
         org_content = content.encode('utf-8')

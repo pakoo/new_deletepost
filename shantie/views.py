@@ -510,4 +510,17 @@ def hide_post(request):
         print 'res:',res
     return HttpResponse(res)
         
-     
+def tu(request):
+    """
+    图片列表
+    """
+    #pic_url = '71cf3bc79f3df8dc7fa3ae06cd11728b4610288e.jpg.jpg'
+    #return render('tu.html',{'src':'http://imgsrc.baidu.com/forum/pic/item/'+pic_url})
+    img_list = []
+    img_list = mdb.get_tu(1,'liyi')
+    #img_list = [{'post_url':a['post_url'],'url':a['url']} for a in img_list]
+    print img_list
+    return render('tu.html',{'img_list':img_list})
+
+
+

@@ -16,6 +16,7 @@ urlpatterns = patterns('',
      url(r'^$', 'shantie.views.mainpage'),
      url(r'^real/(?P<page>\d+)', 'shantie.views.real'),
      url(r'^filter/(?P<page>\d+)', 'shantie.views.filter_post_list'),
+     url(r'^tu$', 'shantie.views.tu'),
 
 
      url(r'^kds$', 'shantie.views.xkds_mainpage'),

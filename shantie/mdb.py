@@ -326,6 +326,15 @@ def get_advice():
     print 'advice_list:',advice_list
     return advice_list 
     
+def get_tu(page=1,bar_name='liyi'):
+    """
+    获取图吧图片
+    """
+    img_url_list = con['tieba'].img.find({'type_name':bar_name},limit=30,skip=(page-1)*30,sort=[('create_time',DESCENDING)])
+    if img_url_list.count()>0:
+        return img_url_list
+
+
 
 if __name__ == "__main__":
     pass
@@ -339,3 +348,4 @@ if __name__ == "__main__":
     #print user_login('gan','123456')
     #add_advice('test','admin')
     #print get_advice()
+    get_tu()
